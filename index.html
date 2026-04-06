@@ -27,11 +27,10 @@
 
   /* STATS */
   .stats-row{display:flex;gap:10px;padding:0 20px 16px;}
-  .stat-chip{flex:1;background:var(--surface);border-radius:var(--r-md);padding:12px 10px;text-align:center;box-shadow:0 2px 8px var(--shadow);border:1px solid var(--outline);cursor:pointer;transition:transform .15s;user-select:none;}
+  .stat-chip{flex:1;background:var(--surface);border-radius:var(--r-md);padding:14px 10px;text-align:center;box-shadow:0 2px 8px var(--shadow);border:1px solid var(--outline);cursor:pointer;transition:transform .15s;user-select:none;}
   .stat-chip:active{transform:scale(.95);}
   .stat-chip .num{font-family:'Fraunces',serif;font-size:22px;font-weight:600;}
-  .stat-chip .lbl{font-size:10px;color:var(--text-muted);margin-top:1px;text-transform:uppercase;letter-spacing:.5px;}
-  .stat-chip .tap-label{font-size:9px;color:var(--text-muted);display:block;margin-top:2px;}
+  .stat-chip .lbl{font-size:11px;color:var(--text-muted);margin-top:2px;font-weight:500;}
   .stat-chip.blush .num{color:#C0507A;} .stat-chip.lilac .num{color:#7A50C0;} .stat-chip.mint .num{color:#3A9A82;} .stat-chip.butter .num{color:#B07A10;}
 
   /* TABS (removed — only bottom nav) */
@@ -68,8 +67,8 @@
   /* FILTER ROW */
   .filter-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none;}
   .filter-row::-webkit-scrollbar{display:none;}
-  .filter-btn{flex-shrink:0;padding:6px 14px;border-radius:var(--r-full);border:1.5px solid var(--outline);background:var(--surface);font-size:12px;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .15s;white-space:nowrap;}
-  .filter-btn.active{background:var(--blush);border-color:var(--coral);color:#8B2050;}
+  .filter-btn{flex-shrink:0;padding:8px 16px;border-radius:var(--r-full);border:1.5px solid var(--outline);background:var(--surface);font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .15s;white-space:nowrap;min-height:40px;display:flex;align-items:center;}
+  .filter-btn.active{background:var(--blush);border-color:var(--coral);color:#8B2050;font-weight:600;}
 
   /* FAB */
   .fab{position:fixed;bottom:calc(80px + var(--safe-bottom) + 12px);right:20px;height:52px;padding:0 24px;border-radius:var(--r-full);background:linear-gradient(135deg,#C07AB0,#A07AB0);color:#fff;font-size:16px;font-weight:600;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(160,122,176,.45);display:flex;align-items:center;justify-content:center;gap:6px;transition:transform .15s,box-shadow .15s;z-index:100;white-space:nowrap;}
@@ -78,8 +77,9 @@
   /* BOTTOM NAV */
   .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;border-top:1px solid var(--outline);display:flex;padding-bottom:var(--safe-bottom);z-index:200;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(255,255,255,.85);}
   .nav-item{flex:1;padding:10px 0 12px;text-align:center;cursor:pointer;transition:all .2s;}
-  .nav-item .nav-icon{font-size:22px;display:block;}
-  .nav-item .nav-lbl{font-size:10px;font-weight:500;color:var(--text-muted);margin-top:2px;display:block;}
+  .nav-item .nav-icon{font-size:22px;display:block;color:var(--text-muted);transition:color .2s;}
+  .nav-item .nav-lbl{font-size:10px;font-weight:500;color:var(--text-muted);margin-top:2px;display:block;transition:color .2s;}
+  .nav-item.active .nav-icon{color:#A07AB0;}
   .nav-item.active .nav-lbl{color:#A07AB0;font-weight:600;}
   .nav-pill{position:absolute;bottom:calc(var(--safe-bottom) + 44px);height:3px;width:28px;background:#A07AB0;border-radius:var(--r-full);transition:left .25s cubic-bezier(.4,0,.2,1);}
 
@@ -97,7 +97,6 @@
   /* ══ AI LOOKUP ZONE ══ */
   .ai-lookup-box{background:linear-gradient(135deg,#EDE0F8,#F7E8F5);border-radius:var(--r-lg);padding:16px;margin-bottom:18px;border:1.5px solid #D9C6F0;}
   .ai-lookup-label{font-size:11px;font-weight:700;color:#7A50A0;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
-  .ai-lookup-label .spark{font-size:14px;}
   .ai-input-row{display:flex;gap:8px;align-items:center;}
   .ai-input{flex:1;padding:11px 14px;border-radius:var(--r-full);border:1.5px solid #D9C6F0;background:#fff;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;}
   .ai-input:focus{border-color:#A07AB0;}
@@ -254,32 +253,32 @@
       <div class="app-subtitle">Vintage Polly Pocket · Collection Tracker</div>
     </div>
     <div style="display:flex;align-items:center;gap:8px;">
-      <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" aria-label="Toggle dark mode">🌙</button>
+      <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" aria-label="Toggle dark mode"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>
       <div class="header-badge" id="collectionCount">0 sets</div>
     </div>
   </div>
 
   <div class="stats-row" role="group" aria-label="Collection statistics">
-    <div class="stat-chip blush" onclick="filterTap('owned')" role="button" tabindex="0" aria-label="Owned sets — tap to filter collection" onkeydown="if(event.key==='Enter'||event.key===' ')filterTap('owned')"><div class="num" id="statTotal">0</div><div class="lbl">Owned</div><span class="tap-label" aria-hidden="true">tap to filter ↓</span></div>
-    <div class="stat-chip lilac" onclick="filterTap('value')" role="button" tabindex="0" aria-label="Estimated value — tap to sort by value" onkeydown="if(event.key==='Enter'||event.key===' ')filterTap('value')"><div class="num" id="statValue">$0</div><div class="lbl">Est. Value</div><span class="tap-label" aria-hidden="true">tap to sort ↓</span></div>
-    <div class="stat-chip mint" onclick="filterTap('complete')" role="button" tabindex="0" aria-label="Completion rate — tap to filter complete sets" onkeydown="if(event.key==='Enter'||event.key===' ')filterTap('complete')"><div class="num" id="statComplete">0%</div><div class="lbl">Complete</div><span class="tap-label" aria-hidden="true">tap to filter ↓</span></div>
-    <div class="stat-chip butter" onclick="filterTap('wishlist')" role="button" tabindex="0" aria-label="Wishlist count — tap to view wishlist" onkeydown="if(event.key==='Enter'||event.key===' ')filterTap('wishlist')"><div class="num" id="statWish">0</div><div class="lbl">Wishlist</div><span class="tap-label" aria-hidden="true">tap to switch ↓</span></div>
+    <div class="stat-chip blush" onclick="filterTap('owned')" role="button" tabindex="0" aria-label="Owned sets" onkeydown="if(event.key==='Enter'||event.key===' ')filterTap('owned')"><div class="num" id="statTotal">0</div><div class="lbl">Owned</div></div>
+    <div class="stat-chip lilac" onclick="filterTap('value')" role="button" tabindex="0" aria-label="Estimated value" onkeydown="if(event.key==='Enter'||event.key===' ')filterTap('value')"><div class="num" id="statValue">$0</div><div class="lbl">Value</div></div>
+    <div class="stat-chip mint" onclick="filterTap('complete')" role="button" tabindex="0" aria-label="Completion rate" onkeydown="if(event.key==='Enter'||event.key===' ')filterTap('complete')"><div class="num" id="statComplete">0%</div><div class="lbl">Complete</div></div>
+    <div class="stat-chip butter" onclick="filterTap('wishlist')" role="button" tabindex="0" aria-label="Wishlist count" onkeydown="if(event.key==='Enter'||event.key===' ')filterTap('wishlist')"><div class="num" id="statWish">0</div><div class="lbl">Wishlist</div></div>
   </div>
 
   <!-- COLLECTION -->
   <div class="section active" id="section-collection">
-    <div class="search-wrap">
-      <span class="search-icon" aria-hidden="true">🔍</span>
-      <input type="text" placeholder="Search your collection…" oninput="filterCollection(this.value)" aria-label="Search your collection">
-    </div>
-    <p style="font-size:10px;color:#A07AB0;margin-top:6px;margin-left:4px;">AI lookup — enter a set name to get price data.</p>
 
-    <!-- AI LOOKUP moved here -->
-    <div class="ai-lookup-box" id="collection-ai-lookup">
+    <!-- UNIFIED AI LOOKUP + SEARCH BAR -->
+    <div class="ai-lookup-box" id="collection-ai-lookup" style="margin-bottom:14px;">
+      <div class="ai-lookup-label">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7A50A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Look up any vintage set — get prices &amp; add to collection
+      </div>
       <div class="ai-input-row">
-        <input class="ai-input" id="ai-query-coll" placeholder="e.g. Polly's Magical Mansion…" type="text" onkeydown="if(event.key==='Enter')doAILookupFromCollection()">
-        <button class="ai-btn" id="ai-btn-coll" onclick="doAILookupFromCollection()">
-          <span id="ai-btn-text-coll">Search ✨</span>
+        <input class="ai-input" id="ai-query-coll" placeholder="e.g. Polly's Magical Mansion…" type="text" onkeydown="if(event.key==='Enter')doAILookupFromCollection()" aria-label="Search for a Polly Pocket set">
+        <button class="ai-btn" id="ai-btn-coll" onclick="doAILookupFromCollection()" aria-label="Look up set">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <span id="ai-btn-text-coll">Look up</span>
         </button>
       </div>
       <p id="ai-rate-limit-coll" style="font-size:11px;color:var(--text-muted);text-align:right;margin-top:5px;"></p>
@@ -301,12 +300,25 @@
           <div class="ai-price-chip"><div class="apc-val" id="res-mint-coll"></div><div class="apc-lbl">Mint/MIB</div></div>
         </div>
         <div class="ai-tags-row" id="res-tags-coll"></div>
-        <a class="ebay-link" id="res-ebay-coll" href="#" target="_blank" rel="noopener">🛒 View live eBay sold listings →</a>
-        <div style="display:flex;gap:8px;margin-top:4px;">
-          <button class="ai-fill-btn" style="flex:1;" onclick="openAddSheetWithAI()">✦ Add to Collection</button>
-          <button class="wish-star-btn" onclick="addAIResultToWishlist()" aria-label="Add to Wishlist" data-tooltip="Add to Wishlist" style="width:52px;height:44px;border-radius:var(--r-full);background:linear-gradient(135deg,#F7C5D5,#F4A28C);border:none;font-size:22px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:transform .15s;box-shadow:0 2px 8px rgba(240,100,130,.25);" aria-haspopup="false">⭐</button>
+        <a class="ebay-link" id="res-ebay-coll" href="#" target="_blank" rel="noopener">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/></svg>
+          View live eBay sold listings
+        </a>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button class="ai-fill-btn" style="flex:1;" onclick="openAddSheetWithAI()">+ Add to Collection</button>
+          <button class="wish-star-btn" onclick="addAIResultToWishlist()" aria-label="Save to Wishlist" data-tooltip="Save to Wishlist" style="width:52px;height:44px;border-radius:var(--r-full);background:#F7C5D5;border:1.5px solid #F4A28C;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:transform .15s;" aria-haspopup="false">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B2050" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </button>
         </div>
       </div>
+    </div>
+
+    <!-- COLLECTION SEARCH (filters existing items only) -->
+    <div class="search-wrap">
+      <span class="search-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+      <input type="text" placeholder="Filter your collection…" oninput="filterCollection(this.value)" aria-label="Filter your collection">
     </div>
 
     <div class="filter-row">
@@ -319,23 +331,30 @@
     </div>
     <div id="collection-list"></div>
     <div class="empty" id="collection-empty" style="display:none;">
-      <div class="ico">🏠</div>
+      <div class="ico"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#A07AB0" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
       <h3>No sets yet!</h3>
-      <p>Start building your vintage collection.<br>Use AI lookup to find any set instantly.</p>
-      <button class="btn-primary" style="margin-top:20px;width:auto;padding:14px 28px;" onclick="openSheet()">＋ Add your first set</button>
+      <p>Search any set name above to get prices and add it to your collection.</p>
+      <button class="btn-primary" style="margin-top:20px;width:auto;padding:14px 28px;" onclick="openSheet()">Add your first set</button>
     </div>
   </div>
 
   <!-- WISHLIST -->
   <div class="section" id="section-wishlist">
     <div id="wishlist-list"></div>
-    <button class="btn-secondary" onclick="openWishlistSheet()" style="margin-top:4px;">+ Add to Wishlist</button>
+    <button class="btn-primary" onclick="openWishlistSheet()" style="margin-top:4px;">
+      <span style="display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add to Wishlist
+      </span>
+    </button>
   </div>
 
   <!-- PRICE GUIDE -->
   <div class="section" id="section-prices">
     <div class="search-wrap">
-      <span class="search-icon">🔍</span>
+      <span class="search-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
       <input type="text" placeholder="Search price guide…" oninput="filterPrices(this.value)">
     </div>
     <div class="card">
@@ -351,7 +370,7 @@
     <!-- In-app Collection Table -->
     <div class="card" style="overflow-x:auto;margin-bottom:12px;">
       <div class="card-header">
-        <div class="card-title">📊 Collection Sheet</div>
+        <div class="card-title">Collection Sheet</div>
         <div style="font-size:11px;color:var(--text-muted);">All your data, right here</div>
       </div>
       <div id="data-table-wrap" style="padding:0 0 14px;overflow-x:auto;">
@@ -376,7 +395,7 @@
     <!-- Wishlist Table -->
     <div class="card" style="overflow-x:auto;margin-bottom:14px;">
       <div class="card-header">
-        <div class="card-title">⭐ Wishlist Sheet</div>
+        <div class="card-title">Wishlist Sheet</div>
       </div>
       <div style="padding:0 0 14px;overflow-x:auto;">
         <table style="width:100%;border-collapse:collapse;font-size:12px;min-width:400px;">
@@ -396,41 +415,59 @@
 
     <!-- Actions -->
     <div class="export-card">
-      <div class="ico">📋</div><h3>Export to Notes</h3>
+      <div class="ico"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#7A50A0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></div>
+      <h3>Export to Notes</h3>
       <p>Copy your collection as formatted text to paste into Apple Notes or anywhere.</p>
       <button class="btn-primary" onclick="exportToNotes()">Copy to Clipboard</button>
     </div>
     <div class="export-card" style="background:linear-gradient(135deg,#B8E8DC,#FAE8A4);">
-      <div class="ico">📤</div><h3>Share</h3>
+      <div class="ico"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3A7A62" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div>
+      <h3>Share</h3>
       <p>Send your collection to Notes, Reminders, or any other app.</p>
       <button class="btn-primary" style="background:linear-gradient(135deg,#3A9A82,#2A7A62);" onclick="shareCollection()">Share Collection</button>
     </div>
     <div class="export-card" style="background:linear-gradient(135deg,#FAE8A4,#F7C5D5);">
-      <div class="ico">💾</div><h3>Backup Data</h3>
+      <div class="ico"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#B07A10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+      <h3>Backup Data</h3>
       <p>Download a JSON backup of all your data that you can restore anytime.</p>
       <button class="btn-primary" style="background:linear-gradient(135deg,#C07830,#A05020);" onclick="backupData()">Download Backup</button>
     </div>
-    <button class="btn-secondary" onclick="document.getElementById('restoreInput').click()">⬆️ Restore from Backup</button>
+    <button class="btn-secondary" onclick="document.getElementById('restoreInput').click()">Restore from Backup</button>
     <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(this)">
   </div>
 </div>
 
-<button class="fab" id="fab" onclick="openAddSheet()" aria-label="Add a new set to your collection">＋ Add Set</button>
+<button class="fab" id="fab" onclick="openAddSheet()" aria-label="Add a new set to your collection">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  Add Set
+</button>
 
 <nav class="bottom-nav" id="bottomNav" aria-label="Main navigation">
   <div class="nav-pill" id="navPill" style="left:calc(10% - 14px)" aria-hidden="true"></div>
-  <div class="nav-item active" onclick="bottomNav(0,'collection')" role="button" tabindex="0" aria-label="Collection tab" aria-current="page" onkeydown="if(event.key==='Enter'||event.key===' ')bottomNav(0,'collection')"><span class="nav-icon" aria-hidden="true">🏠</span><span class="nav-lbl">Collection</span></div>
-  <div class="nav-item" onclick="bottomNav(1,'wishlist')" role="button" tabindex="0" aria-label="Wishlist tab" onkeydown="if(event.key==='Enter'||event.key===' ')bottomNav(1,'wishlist')"><span class="nav-icon" aria-hidden="true">⭐</span><span class="nav-lbl">Wishlist</span></div>
-  <div class="nav-item" onclick="bottomNav(2,'prices')" role="button" tabindex="0" aria-label="Price guide tab" onkeydown="if(event.key==='Enter'||event.key===' ')bottomNav(2,'prices')"><span class="nav-icon" aria-hidden="true">💰</span><span class="nav-lbl">Prices</span></div>
-  <div class="nav-item" onclick="bottomNav(3,'export')" role="button" tabindex="0" aria-label="Sheet view tab" onkeydown="if(event.key==='Enter'||event.key===' ')bottomNav(3,'export')"><span class="nav-icon" aria-hidden="true">🗂️</span><span class="nav-lbl">Sheet View</span></div>
+  <div class="nav-item active" onclick="bottomNav(0,'collection')" role="button" tabindex="0" aria-label="Collection tab" aria-current="page" onkeydown="if(event.key==='Enter'||event.key===' ')bottomNav(0,'collection')">
+    <span class="nav-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
+    <span class="nav-lbl">Collection</span>
+  </div>
+  <div class="nav-item" onclick="bottomNav(1,'wishlist')" role="button" tabindex="0" aria-label="Wishlist tab" onkeydown="if(event.key==='Enter'||event.key===' ')bottomNav(1,'wishlist')">
+    <span class="nav-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span>
+    <span class="nav-lbl">Wishlist</span>
+  </div>
+  <div class="nav-item" onclick="bottomNav(2,'prices')" role="button" tabindex="0" aria-label="Price guide tab" onkeydown="if(event.key==='Enter'||event.key===' ')bottomNav(2,'prices')">
+    <span class="nav-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
+    <span class="nav-lbl">Prices</span>
+  </div>
+  <div class="nav-item" onclick="bottomNav(3,'export')" role="button" tabindex="0" aria-label="Sheet view tab" onkeydown="if(event.key==='Enter'||event.key===' ')bottomNav(3,'export')">
+    <span class="nav-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></span>
+    <span class="nav-lbl">Sheet</span>
+  </div>
 </nav>
 
 <!-- ══ ADD SET SHEET ══ -->
 <div class="sheet-overlay" id="addSheet" onclick="closeAddSheet(event)">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <div class="sheet-title">Add a Set ✦</div>
-    <div class="sheet-subtitle">Type a name below and let AI fill in the details ✨</div>
+    <div class="sheet-title">Add a Set</div>
+    <div class="sheet-subtitle">Type a name below and let AI fill in the details</div>
 
     <!-- TWO-STEP PROGRESS BAR -->
     <div class="sheet-progress" style="display:flex;gap:6px;margin-bottom:18px;">
@@ -526,27 +563,29 @@
       <div class="form-group">
         <label class="form-label">Card Color</label>
         <div class="chip-group" id="color-chips">
-          <div class="chip-opt" onclick="selectColor(this,'#F7C5D5')" style="background:#F7C5D5;border-color:#F4A28C;">🌸 Blush</div>
-          <div class="chip-opt selected" onclick="selectColor(this,'#D9C6F0')" style="background:#D9C6F0;border-color:#A07AB0;color:#5A2A90;">💜 Lilac</div>
-          <div class="chip-opt" onclick="selectColor(this,'#B8E8DC')" style="background:#B8E8DC;border-color:#3A9A82;">🌿 Mint</div>
-          <div class="chip-opt" onclick="selectColor(this,'#FAE8A4')" style="background:#FAE8A4;border-color:#D4A020;">☀️ Butter</div>
-          <div class="chip-opt" onclick="selectColor(this,'#BDDFF5')" style="background:#BDDFF5;border-color:#5099C5;">🩵 Sky</div>
+          <div class="chip-opt" onclick="selectColor(this,'#F7C5D5')" style="display:flex;align-items:center;gap:7px;"><span style="width:14px;height:14px;border-radius:50%;background:#F7C5D5;border:1.5px solid #F4A28C;flex-shrink:0;display:inline-block;"></span> Blush</div>
+          <div class="chip-opt selected" onclick="selectColor(this,'#D9C6F0')" style="display:flex;align-items:center;gap:7px;background:#D9C6F0;border-color:#A07AB0;color:#5A2A90;"><span style="width:14px;height:14px;border-radius:50%;background:#D9C6F0;border:1.5px solid #A07AB0;flex-shrink:0;display:inline-block;"></span> Lilac</div>
+          <div class="chip-opt" onclick="selectColor(this,'#B8E8DC')" style="display:flex;align-items:center;gap:7px;"><span style="width:14px;height:14px;border-radius:50%;background:#B8E8DC;border:1.5px solid #3A9A82;flex-shrink:0;display:inline-block;"></span> Mint</div>
+          <div class="chip-opt" onclick="selectColor(this,'#FAE8A4')" style="display:flex;align-items:center;gap:7px;"><span style="width:14px;height:14px;border-radius:50%;background:#FAE8A4;border:1.5px solid #D4A020;flex-shrink:0;display:inline-block;"></span> Butter</div>
+          <div class="chip-opt" onclick="selectColor(this,'#BDDFF5')" style="display:flex;align-items:center;gap:7px;"><span style="width:14px;height:14px;border-radius:50%;background:#BDDFF5;border:1.5px solid #5099C5;flex-shrink:0;display:inline-block;"></span> Sky</div>
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">📸 Photo</label>
+        <label class="form-label">Photo</label>
         <div class="photo-upload-area" id="photo-upload-area">
           <input type="file" accept="image/*" id="f-photo" onchange="handlePhotoUpload(this)">
           <div class="photo-placeholder" id="photo-placeholder">
-            <div style="font-size:32px;margin-bottom:6px;">📷</div>
+            <div style="margin-bottom:6px;">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </div>
             <div style="font-size:14px;font-weight:500;color:var(--text-muted);">Tap to add a photo</div>
             <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Camera roll or file</div>
           </div>
           <img class="photo-preview-img" id="photo-preview-img" src="" alt="Set photo">
         </div>
-        <button type="button" id="photo-clear-btn" onclick="clearPhoto()" style="display:none;width:100%;padding:10px;border-radius:var(--r-full);border:1.5px solid var(--outline);background:var(--cream);font-size:13px;color:#8B2050;cursor:pointer;margin-top:8px;font-family:'DM Sans',sans-serif;">🗑 Remove photo</button>
+        <button type="button" id="photo-clear-btn" onclick="clearPhoto()" style="display:none;width:100%;padding:10px;border-radius:var(--r-full);border:1.5px solid var(--outline);background:var(--cream);font-size:13px;color:#8B2050;cursor:pointer;margin-top:8px;font-family:'DM Sans',sans-serif;">Remove photo</button>
       </div>
-      <button class="btn-primary" onclick="saveSet()">Save to Collection ✦</button>
+      <button class="btn-primary" onclick="saveSet()">Save to Collection</button>
       <button class="btn-secondary" onclick="closeSheet('addSheet')">Cancel</button>
     </div>
   </div>
@@ -556,14 +595,17 @@
 <div class="sheet-overlay" id="wishSheet" onclick="closeAddSheet(event)">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <div class="sheet-title">Add to Wishlist ⭐</div>
+    <div class="sheet-title">Add to Wishlist</div>
 
     <!-- AI Lookup in wishlist too -->
     <div class="ai-lookup-box">
-      <div class="ai-lookup-label"><span class="spark">✨</span> AI Lookup</div>
+      <div class="ai-lookup-label">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7A50A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        AI Lookup
+      </div>
       <div class="ai-input-row">
         <input class="ai-input" id="wai-query" placeholder="Set name…" type="text" onkeydown="if(event.key==='Enter')doWishAILookup()">
-        <button class="ai-btn" id="wai-btn" onclick="doWishAILookup()"><span id="wai-btn-text">Search ✨</span></button>
+        <button class="ai-btn" id="wai-btn" onclick="doWishAILookup()"><span id="wai-btn-text">Look up</span></button>
       </div>
       <div class="ai-spinner" id="wai-spinner">
         <div class="spinner"></div>
@@ -576,8 +618,8 @@
           <div class="ai-price-chip"><div class="apc-val" id="wres-good"></div><div class="apc-lbl">Good</div></div>
           <div class="ai-price-chip"><div class="apc-val" id="wres-mint"></div><div class="apc-lbl">Mint/MIB</div></div>
         </div>
-        <a class="ebay-link" id="wres-ebay" href="#" target="_blank" rel="noopener">🛒 View live eBay sold listings →</a>
-        <button class="ai-fill-btn" onclick="applyWishAIResult()">✦ Prefill wishlist fields</button>
+        <a class="ebay-link" id="wres-ebay" href="#" target="_blank" rel="noopener">View live eBay sold listings</a>
+        <button class="ai-fill-btn" onclick="applyWishAIResult()">Prefill wishlist fields</button>
       </div>
     </div>
 
@@ -598,16 +640,16 @@
     <div class="form-group">
       <label class="form-label">Priority</label>
       <div class="chip-group" id="wish-priority">
-        <div class="chip-opt selected" onclick="selectSingleChip('wish-priority',this)">🔥 Must Have</div>
-        <div class="chip-opt" onclick="selectSingleChip('wish-priority',this)">💛 Want It</div>
-        <div class="chip-opt" onclick="selectSingleChip('wish-priority',this)">🤍 Nice to Have</div>
+        <div class="chip-opt selected" onclick="selectSingleChip('wish-priority',this)" style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:#C0507A;flex-shrink:0;display:inline-block;"></span> Must Have</div>
+        <div class="chip-opt" onclick="selectSingleChip('wish-priority',this)" style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:#D4A020;flex-shrink:0;display:inline-block;"></span> Want It</div>
+        <div class="chip-opt" onclick="selectSingleChip('wish-priority',this)" style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:#9B8FB0;flex-shrink:0;display:inline-block;"></span> Nice to Have</div>
       </div>
     </div>
     <div class="form-group">
       <label class="form-label">Notes</label>
       <textarea class="form-textarea" id="w-notes" placeholder="Source, eBay search tip…"></textarea>
     </div>
-    <button class="btn-primary" onclick="saveWishlist()">Add to Wishlist ⭐</button>
+    <button class="btn-primary" onclick="saveWishlist()">Add to Wishlist</button>
     <button class="btn-secondary" onclick="closeSheet('wishSheet')">Cancel</button>
   </div>
 </div>
@@ -694,7 +736,7 @@ function checkRateLimit() {
   if (usage.count >= DAILY_LIMIT) {
     const resultEl = document.getElementById('ai-result-coll');
     if (resultEl) {
-      resultEl.innerHTML = '<div style="text-align:center;padding:16px 8px;"><div style="font-size:28px;margin-bottom:8px;">⏰</div><div style="font-weight:700;color:#C0507A;margin-bottom:8px;font-size:15px;">Daily limit reached!</div><div style="font-size:13px;color:var(--text-muted);line-height:1.5;">You\'ve used your 10 daily AI lookups — come back tomorrow!<br>In the meantime, try the built-in price guide below. 👇</div></div>';
+      resultEl.innerHTML = '<div style="text-align:center;padding:16px 8px;"><div style="margin-bottom:10px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#C0507A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div style="font-weight:700;color:#C0507A;margin-bottom:8px;font-size:15px;">Daily limit reached!</div><div style="font-size:13px;color:var(--text-muted);line-height:1.5;">You\'ve used your 10 daily AI lookups — resets at midnight.<br>In the meantime, try the built-in price guide below.</div></div>';
       resultEl.classList.add('show');
     }
     return false;
@@ -731,22 +773,20 @@ function displayAIResultCollection(r) {
   conf.textContent = r.confidence === 'high' ? '✓ High confidence' : r.confidence === 'medium' ? '~ Medium' : '? Low confidence';
   conf.className = 'ai-confidence conf-'+(r.confidence||'med').replace('medium','med');
   const tags = document.getElementById('res-tags-coll');
-  const items = [...(r.dolls||[]).map(d=>`<span class="ai-tag tag doll">🪆 ${d}</span>`), ...(r.accessories||[]).slice(0,6).map(a=>`<span class="ai-tag tag acc">🎀 ${a}</span>`)];
+  const items = [...(r.dolls||[]).map(d=>`<span class="ai-tag tag doll" style="display:inline-flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5 21v-1a7 7 0 0114 0v1"/></svg> ${d}</span>`), ...(r.accessories||[]).slice(0,6).map(a=>`<span class="ai-tag tag acc" style="display:inline-flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> ${a}</span>`)];
   tags.innerHTML = items.join('');
-  const q = encodeURIComponent(`vintage polly pocket "${r.name||r.name}" sold`);
-  document.getElementById('res-ebay-coll').href = `https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1`;
+  document.getElementById('res-ebay-coll').href = buildEbayUrl(r.name);
   document.getElementById('ai-result-coll').classList.add('show');
 }
 function addAIResultToWishlist() {
   if (!currentCollectionAIResult) return;
   const r = currentCollectionAIResult;
-  // Check for duplicate
   if (wishlist.some(w => w.name.toLowerCase() === (r.name||'').toLowerCase())) {
-    showToast('⭐ Already on your wishlist!'); return;
+    showToast('Already on your wishlist!'); return;
   }
-  wishlist.push({ name: r.name||'', year: r.year||'', price: r.good_price||0, priority: '💛 Want It', notes: '' });
+  wishlist.push({ name: r.name||'', year: r.year||'', price: r.good_price||0, priority: 'Want It', notes: '' });
   save(); renderWishlist();
-  showToast('⭐ Added to wishlist!');
+  showToast('Added to wishlist!');
 }
 
 function openAddSheetWithAI() {
@@ -780,7 +820,7 @@ function openAddSheetWithAI() {
       const el = document.getElementById(id);
       if (el.value) el.classList.add('prefilled');
     });
-    showToast('✨ Fields prefilled! Edit anything you need.');
+    showToast('Fields prefilled! Edit anything you need.');
   }, 100);
 }
 
@@ -819,7 +859,7 @@ function setAILoading(on, btnId, txtId, spinnerId, resultId) {
   const txt = document.getElementById(txtId);
   const spinner = document.getElementById(spinnerId);
   btn.disabled = on;
-  txt.textContent = on ? '…' : 'Search ✨';
+  txt.textContent = on ? '…' : 'Look up';
   spinner.classList.toggle('show', on);
   if (on) document.getElementById(resultId).classList.remove('show');
 }
@@ -855,10 +895,9 @@ function displayAIResult(r) {
   conf.textContent = r.confidence === 'high' ? '✓ High confidence' : r.confidence === 'medium' ? '~ Medium' : '? Low confidence';
   conf.className = 'ai-confidence conf-'+(r.confidence||'med').replace('medium','med');
   const tags = document.getElementById('res-tags');
-  const items = [...(r.dolls||[]).map(d=>`<span class="ai-tag tag doll">🪆 ${d}</span>`), ...(r.accessories||[]).slice(0,6).map(a=>`<span class="ai-tag tag acc">🎀 ${a}</span>`)];
+  const items = [...(r.dolls||[]).map(d=>`<span class="ai-tag tag doll" style="display:inline-flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5 21v-1a7 7 0 0114 0v1"/></svg> ${d}</span>`), ...(r.accessories||[]).slice(0,6).map(a=>`<span class="ai-tag tag acc" style="display:inline-flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> ${a}</span>`)];
   tags.innerHTML = items.join('');
-  const q = encodeURIComponent(`vintage polly pocket "${r.name||r.name}" sold`);
-  document.getElementById('res-ebay').href = `https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1`;
+  document.getElementById('res-ebay').href = buildEbayUrl(r.name);
   document.getElementById('ai-result').classList.add('show');
 }
 
@@ -867,8 +906,7 @@ function displayWishAIResult(r) {
   document.getElementById('wres-play').textContent = `$${r.play_price||'?'}`;
   document.getElementById('wres-good').textContent = `$${r.good_price||'?'}`;
   document.getElementById('wres-mint').textContent = `$${r.mint_price||'?'}`;
-  const q = encodeURIComponent(`vintage polly pocket "${r.name}" sold`);
-  document.getElementById('wres-ebay').href = `https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1`;
+  document.getElementById('wres-ebay').href = buildEbayUrl(r.name);
   document.getElementById('wai-result').classList.add('show');
 }
 
@@ -907,7 +945,7 @@ function applyAIResult() {
     if (el.value) el.classList.add('prefilled');
   });
 
-  showToast('✨ Fields prefilled! Edit anything you need.');
+  showToast('Fields prefilled! Edit anything you need.');
 
   // Scroll to form
   setTimeout(()=>{
@@ -921,10 +959,18 @@ function applyWishAIResult() {
   document.getElementById('w-name').value  = r.name  || '';
   document.getElementById('w-year').value  = r.year  || '';
   document.getElementById('w-price').value = r.good_price || '';
-  showToast('✨ Wishlist prefilled!');
+  showToast('Wishlist prefilled!');
 }
 
 // ══ XSS PROTECTION ══
+// ══ EBAY SEARCH URL HELPER ══
+// Builds a broad sold-listings search — no exact quotes, no "sold" keyword (handled by params)
+function buildEbayUrl(name) {
+  const clean = (name||'').replace(/^polly\s*pocket\s*/i,'').trim();
+  const q = encodeURIComponent('polly pocket ' + clean);
+  return 'https://www.ebay.com/sch/i.html?_nkw=' + q + '&LH_Sold=1&LH_Complete=1&_sop=13';
+}
+
 function escapeHTML(str) {
   if (str === null || str === undefined) return '';
   return String(str)
@@ -998,8 +1044,10 @@ function renderCollection(filter='', textFilter='') {
     const pct = Math.min(100,Math.round(included.length/6*100));
     const condClass = item.condition==='Mint'?'cond-mint':item.condition==='Good'?'cond-good':'cond-play';
     const color = item.color||'#D9C6F0';
-    const q = encodeURIComponent(`vintage polly pocket "${item.name}" sold`);
-    const ebayUrl = `https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1`;
+    const ebayUrl = buildEbayUrl(item.name);
+    const trashIcon = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>`;
+    const personIcon = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5 21v-1a7 7 0 0114 0v1"/></svg>`;
+    const accIcon = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>`;
     return `
     <div class="card">
       <div class="card-strip" style="background:${escapeHTML(color)}"></div>
@@ -1015,8 +1063,8 @@ function renderCollection(filter='', textFilter='') {
         </div>
       </div>
       <div class="card-body">
-        ${dolls.length?`<div class="tags">${dolls.map(d=>`<span class="tag doll">🪆 ${escapeHTML(d)}</span>`).join('')}</div>`:''}
-        ${accs.length?`<div class="tags" style="margin-top:6px;">${accs.map(a=>`<span class="tag acc">🎀 ${escapeHTML(a)}</span>`).join('')}</div>`:''}
+        ${dolls.length?`<div class="tags">${dolls.map(d=>`<span class="tag doll" style="display:inline-flex;align-items:center;gap:4px;">${personIcon} ${escapeHTML(d)}</span>`).join('')}</div>`:''}
+        ${accs.length?`<div class="tags" style="margin-top:6px;">${accs.map(a=>`<span class="tag acc" style="display:inline-flex;align-items:center;gap:4px;">${accIcon} ${escapeHTML(a)}</span>`).join('')}</div>`:''}
         ${included.length?`<div class="tags" style="margin-top:6px;">${included.map(c=>`<span class="tag have">✓ ${escapeHTML(c)}</span>`).join('')}</div>`:''}
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${escapeHTML(color)};filter:saturate(1.5);"></div></div>
         <div style="font-size:11px;color:var(--text-muted);">Completeness: ${pct}%</div>
@@ -1025,7 +1073,7 @@ function renderCollection(filter='', textFilter='') {
           <div style="text-align:right"><div class="price-lbl">Paid</div><div style="font-family:'Fraunces',serif;font-size:16px;color:var(--text-muted);">$${parseFloat(item.paid||0).toFixed(2)}</div></div>
           <div style="display:flex;gap:6px;align-items:center;">
             <a href="${ebayUrl}" target="_blank" rel="noopener" style="font-size:10px;padding:4px 10px;border-radius:20px;background:#E4EDFC;color:#1A55B0;font-weight:600;text-decoration:none;white-space:nowrap;">eBay $</a>
-            <button onclick="deleteSet(${idx})" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-muted);padding:4px;">🗑</button>
+            <button onclick="deleteSet(${idx})" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:6px;display:flex;align-items:center;" aria-label="Delete set">${trashIcon}</button>
           </div>
         </div>
         ${item.notes?`<div style="font-size:12px;color:var(--text-muted);margin-top:8px;padding:8px;background:var(--cream);border-radius:12px;">${escapeHTML(item.notes)}</div>`:''}
@@ -1037,24 +1085,26 @@ function renderCollection(filter='', textFilter='') {
 function renderWishlist() {
   const list = document.getElementById('wishlist-list');
   if (!wishlist.length) {
-    list.innerHTML=`<div class="empty"><div class="ico">⭐</div><h3>Wishlist empty</h3><p>Add sets you're hunting and let AI suggest target prices.</p></div>`;
+    list.innerHTML=`<div class="empty"><div class="ico"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#A07AB0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><h3>Wishlist empty</h3><p>Add sets you're hunting and let AI suggest target prices.</p></div>`;
     return;
   }
-  const pc = {'🔥 Must Have':'#F7C5D5','💛 Want It':'#FAE8A4','🤍 Nice to Have':'#E8E8E8'};
+  const pc = {'Must Have':'#F7C5D5','Want It':'#FAE8A4','Nice to Have':'#E8E8E8'};
+  const dot = {'Must Have':'#C0507A','Want It':'#D4A020','Nice to Have':'#9B8FB0'};
+  const label = p => p ? p.replace(/^[^\w]*/,'').trim() : 'Want It';
   list.innerHTML = wishlist.map((item,i)=>{
-    const q = encodeURIComponent(`vintage polly pocket "${item.name}" sold`);
+    const dotColor = dot[item.priority] || '#9B8FB0';
     return `
     <div class="wishlist-item">
-      <div class="wish-dot" style="background:${escapeHTML(pc[item.priority]||'#D9C6F0')}"></div>
+      <div class="wish-dot" style="background:${escapeHTML(dotColor)}"></div>
       <div style="flex:1;">
         <div class="wish-name">${escapeHTML(item.name)}</div>
-        <div style="font-size:12px;color:var(--text-muted);">${escapeHTML(item.year||'?')} · ${escapeHTML(item.priority||'💛 Want It')}</div>
+        <div style="font-size:12px;color:var(--text-muted);">${escapeHTML(item.year||'?')} · ${escapeHTML(label(item.priority))}</div>
         ${item.notes?`<div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${escapeHTML(item.notes)}</div>`:''}
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
         <div class="wish-price">$${parseFloat(item.price||0).toFixed(0)}</div>
         <div style="display:flex;gap:5px;">
-          <a href="https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(`vintage polly pocket "${item.name}" sold`)}&LH_Sold=1&LH_Complete=1" target="_blank" style="font-size:10px;padding:4px 8px;border-radius:20px;background:#E4EDFC;color:#1A55B0;font-weight:600;text-decoration:none;">eBay</a>
+          <a href="${buildEbayUrl(item.name)}" target="_blank" style="font-size:10px;padding:4px 8px;border-radius:20px;background:#E4EDFC;color:#1A55B0;font-weight:600;text-decoration:none;">eBay</a>
           <button onclick="moveToCollection(${i})" style="font-size:10px;padding:4px 8px;border-radius:20px;background:var(--lilac);border:none;color:#5A2A90;cursor:pointer;font-weight:600;">Got it!</button>
         </div>
       </div>
@@ -1066,14 +1116,13 @@ function renderPriceGuide(filter='') {
   let items = priceGuide;
   if (filter) items = items.filter(x=>x.name.toLowerCase().includes(filter.toLowerCase()));
   document.getElementById('price-guide-list').innerHTML = items.map(x=>{
-    const q = encodeURIComponent(`vintage polly pocket "${x.name}" sold`);
     return `
     <div class="price-guide-item">
       <div class="pg-color" style="background:${x.color}"></div>
       <div>
         <div class="pg-name">${x.name}</div>
         <div class="pg-year">${x.year} · ${x.maker}</div>
-        <a class="pg-ebay" href="https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1" target="_blank" rel="noopener">🛒 eBay sold listings</a>
+        <a class="pg-ebay" href="${buildEbayUrl(x.name)}" target="_blank" rel="noopener">eBay sold listings</a>
       </div>
       <div class="pg-prices">
         <div class="rng">$${x.low}–$${x.high}</div>
@@ -1105,8 +1154,7 @@ function filterTap(type) {
         const pct = Math.min(100,Math.round(included.length/6*100));
         const condClass = item.condition==='Mint'?'cond-mint':item.condition==='Good'?'cond-good':'cond-play';
         const color = item.color||'#D9C6F0';
-        const q = encodeURIComponent(`vintage polly pocket "${item.name}" sold`);
-        const ebayUrl = `https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1`;
+        const ebayUrl = buildEbayUrl(item.name);
         return `
         <div class="card">
           <div class="card-strip" style="background:${escapeHTML(color)}"></div>
@@ -1122,8 +1170,8 @@ function filterTap(type) {
             </div>
           </div>
           <div class="card-body">
-            ${dolls.length?`<div class="tags">${dolls.map(d=>`<span class="tag doll">🪆 ${escapeHTML(d)}</span>`).join('')}</div>`:''}
-            ${accs.length?`<div class="tags" style="margin-top:6px;">${accs.map(a=>`<span class="tag acc">🎀 ${escapeHTML(a)}</span>`).join('')}</div>`:''}
+            ${dolls.length?`<div class="tags">${dolls.map(d=>`<span class="tag doll" style="display:inline-flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5 21v-1a7 7 0 0114 0v1"/></svg> ${escapeHTML(d)}</span>`).join('')}</div>`:''}
+            ${accs.length?`<div class="tags" style="margin-top:6px;">${accs.map(a=>`<span class="tag acc" style="display:inline-flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> ${escapeHTML(a)}</span>`).join('')}</div>`:''}
             ${included.length?`<div class="tags" style="margin-top:6px;">${included.map(c=>`<span class="tag have">✓ ${escapeHTML(c)}</span>`).join('')}</div>`:''}
             <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${escapeHTML(color)};filter:saturate(1.5);"></div></div>
             <div style="font-size:11px;color:var(--text-muted);">Completeness: ${pct}%</div>
@@ -1132,7 +1180,7 @@ function filterTap(type) {
               <div style="text-align:right"><div class="price-lbl">Paid</div><div style="font-family:'Fraunces',serif;font-size:16px;color:var(--text-muted);">$${parseFloat(item.paid||0).toFixed(2)}</div></div>
               <div style="display:flex;gap:6px;align-items:center;">
                 <a href="${ebayUrl}" target="_blank" rel="noopener" style="font-size:10px;padding:4px 10px;border-radius:20px;background:#E4EDFC;color:#1A55B0;font-weight:600;text-decoration:none;white-space:nowrap;">eBay $</a>
-                <button onclick="deleteSet(${idx})" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-muted);padding:4px;">🗑</button>
+                <button onclick="deleteSet(${idx})" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:6px;display:flex;align-items:center;" aria-label="Delete set"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg></button>
               </div>
             </div>
             ${item.notes?`<div style="font-size:12px;color:var(--text-muted);margin-top:8px;padding:8px;background:var(--cream);border-radius:12px;">${escapeHTML(item.notes)}</div>`:''}
@@ -1198,7 +1246,7 @@ function saveSet() {
   });
   save(); closeSheet('addSheet'); resetAddForm();
   switchSection('collection',null); renderCollection(activeFilter);
-  showToast('✨ Set added!');
+  showToast('Set added!');
 }
 
 function resetAddForm() {
@@ -1256,11 +1304,11 @@ function clearPhoto() {
 function saveWishlist() {
   const name = document.getElementById('w-name').value.trim();
   if (!name) { showToast('Please enter a set name'); return; }
-  const priority = document.querySelector('#wish-priority .chip-opt.selected')?.textContent||'💛 Want It';
+  const priority = (document.querySelector('#wish-priority .chip-opt.selected')?.textContent||'Want It').trim().replace(/^[^\w]*/,'').trim();
   wishlist.push({ name, year:parseInt(document.getElementById('w-year').value)||'', price:parseFloat(document.getElementById('w-price').value)||0, priority, notes:document.getElementById('w-notes').value.trim() });
   save(); closeSheet('wishSheet');
   ['w-name','w-year','w-price','w-notes'].forEach(id=>document.getElementById(id).value='');
-  renderWishlist(); showToast('⭐ Added to wishlist!');
+  renderWishlist(); showToast('Added to wishlist!');
 }
 
 function deleteSet(idx) {
@@ -1303,7 +1351,7 @@ function bottomNav(idx,section) {
 
 // ══ EXPORT ══
 function buildExportText() {
-  const lines=['✦ POCKET TRACKER — Vintage Polly Pocket Collection ✦','Generated: '+new Date().toLocaleDateString(),''];
+  const lines=['POCKET TRACKER — Vintage Polly Pocket Collection','Generated: '+new Date().toLocaleDateString(),''];
   lines.push('══ COLLECTION ('+collection.length+' sets) ══');
   collection.forEach((x,i)=>{
     lines.push('');
@@ -1319,7 +1367,7 @@ function buildExportText() {
   return lines.join('\n');
 }
 function exportToNotes() {
-  navigator.clipboard.writeText(buildExportText()).then(()=>showToast('📋 Copied! Paste into Apple Notes.')).catch(()=>showToast('📋 Try long-pressing and pasting!'));
+  navigator.clipboard.writeText(buildExportText()).then(()=>showToast('Copied! Paste into Apple Notes.')).catch(()=>showToast('Try long-pressing and pasting!'));
 }
 function shareCollection() {
   if (navigator.share) navigator.share({title:'My Polly Pocket Collection',text:buildExportText()}).catch(()=>{});
@@ -1328,10 +1376,10 @@ function shareCollection() {
 function backupData() {
   const blob = new Blob([JSON.stringify({collection,wishlist,exported:new Date().toISOString()},null,2)],{type:'application/json'});
   const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='polly-pocket-'+new Date().toISOString().slice(0,10)+'.json'; a.click();
-  showToast('💾 Backup downloaded!');
+  showToast('Backup downloaded!');
 }
 function restoreData(input) {
-  const r = new FileReader(); r.onload=e=>{ try{ const d=JSON.parse(e.target.result); if(d.collection){ collection=d.collection; wishlist=d.wishlist||[]; save(); renderCollection(); renderWishlist(); showToast('✅ Restored!'); } }catch{ showToast('❌ Invalid file'); } }; r.readAsText(input.files[0]);
+  const r = new FileReader(); r.onload=e=>{ try{ const d=JSON.parse(e.target.result); if(d.collection){ collection=d.collection; wishlist=d.wishlist||[]; save(); renderCollection(); renderWishlist(); showToast('Restored!'); } }catch{ showToast('Invalid file'); } }; r.readAsText(input.files[0]);
 }
 
 function showToast(msg) {
@@ -1371,7 +1419,8 @@ function renderDataTables() {
   // Wishlist table
   const wbody = document.getElementById('wish-table-body');
   const wempty = document.getElementById('wish-table-empty');
-  const pc = {'🔥 Must Have':'#C0507A','💛 Want It':'#B07A10','🤍 Nice to Have':'#7A6B82'};
+  const pc = {'Must Have':'#C0507A','Want It':'#B07A10','Nice to Have':'#7A6B82'};
+  const cleanPriority = p => p ? p.replace(/^[^\w]*/,'').trim() : '—';
   if (!wishlist.length) {
     wempty.style.display = 'block';
     wbody.innerHTML = '';
@@ -1379,12 +1428,12 @@ function renderDataTables() {
     wempty.style.display = 'none';
     wbody.innerHTML = wishlist.map((x, i) => {
       const stripe = i % 2 === 0 ? 'background:var(--surface);' : 'background:var(--cream);';
-      const pColor = pc[x.priority] || 'var(--text-muted)';
+      const pColor = pc[x.priority] || pc[cleanPriority(x.priority)] || 'var(--text-muted)';
       return `<tr style="${stripe}border-bottom:1px solid var(--outline);">
         <td style="padding:8px 10px;font-weight:500;">${escapeHTML(x.name)}</td>
         <td style="padding:8px 6px;color:var(--text-muted);">${escapeHTML(x.year || '?')}</td>
         <td style="padding:8px 6px;text-align:right;font-family:'Fraunces',serif;color:#A07AB0;font-weight:600;">$${parseFloat(x.price||0).toFixed(0)}</td>
-        <td style="padding:8px 6px;font-size:12px;color:${escapeHTML(pColor)};font-weight:600;">${escapeHTML(x.priority || '—')}</td>
+        <td style="padding:8px 6px;font-size:12px;color:${escapeHTML(pColor)};font-weight:600;">${escapeHTML(cleanPriority(x.priority))}</td>
       </tr>`;
     }).join('');
   }
@@ -1398,14 +1447,14 @@ updateStats(); renderCollection(); renderWishlist(); renderPriceGuide(); updateR
 function toggleDark() {
   const isDark = document.body.classList.toggle('dark');
   localStorage.setItem('ppDarkMode', isDark ? '1' : '0');
-  document.getElementById('darkToggle').textContent = isDark ? '☀️' : '🌙';
+  document.getElementById('darkToggle').innerHTML = isDark ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>';
 }
 // Apply saved preference on load
 (function() {
   if (localStorage.getItem('ppDarkMode') === '1') {
     document.body.classList.add('dark');
     const btn = document.getElementById('darkToggle');
-    if (btn) btn.textContent = '☀️';
+    if (btn) btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>';
   }
 })();
 </script>
