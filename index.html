@@ -260,6 +260,7 @@
           <span id="ai-btn-text-coll">Search ✨</span>
         </button>
       </div>
+      <p id="ai-rate-limit-coll" style="font-size:11px;color:var(--text-muted);text-align:right;margin-top:5px;"></p>
       <div class="ai-spinner" id="ai-spinner-coll">
         <div class="spinner"></div>
         <span>Looking up vintage details<span class="typing-dots"><span></span><span></span><span></span></span></span>
@@ -639,10 +640,51 @@ function resetSheetSteps() {
   document.getElementById('prog-2').style.background = 'var(--outline)';
 }
 
+// ══ RATE LIMITING ══
+const DAILY_LIMIT = 10;
+function getTodayStr() { return new Date().toISOString().slice(0,10); }
+function getRateLimitUsage() {
+  try {
+    const raw = localStorage.getItem('pp_usage');
+    if (raw) { const obj = JSON.parse(raw); if (obj.date === getTodayStr()) return obj; }
+  } catch(e) {}
+  return { date: getTodayStr(), count: 0 };
+}
+function saveRateLimitUsage(obj) { localStorage.setItem('pp_usage', JSON.stringify(obj)); }
+function updateRateLimitUI() {
+  const usage = getRateLimitUsage();
+  const remaining = Math.max(0, DAILY_LIMIT - usage.count);
+  const el = document.getElementById('ai-rate-limit-coll');
+  if (!el) return;
+  if (remaining === 0) {
+    el.textContent = '0 lookups remaining today — resets at midnight';
+    el.style.color = '#C0507A'; el.style.fontWeight = '600';
+  } else {
+    el.textContent = remaining + ' of ' + DAILY_LIMIT + ' lookups remaining today';
+    el.style.color = 'var(--text-muted)'; el.style.fontWeight = '';
+  }
+}
+function checkRateLimit() {
+  const usage = getRateLimitUsage();
+  if (usage.count >= DAILY_LIMIT) {
+    const resultEl = document.getElementById('ai-result-coll');
+    if (resultEl) {
+      resultEl.innerHTML = '<div style="text-align:center;padding:16px 8px;"><div style="font-size:28px;margin-bottom:8px;">⏰</div><div style="font-weight:700;color:#C0507A;margin-bottom:8px;font-size:15px;">Daily limit reached!</div><div style="font-size:13px;color:var(--text-muted);line-height:1.5;">You\'ve used your 10 daily AI lookups — come back tomorrow!<br>In the meantime, try the built-in price guide below. 👇</div></div>';
+      resultEl.classList.add('show');
+    }
+    return false;
+  }
+  usage.count++;
+  saveRateLimitUsage(usage);
+  updateRateLimitUI();
+  return true;
+}
+
 // ══ AI LOOKUP FROM COLLECTION ══
 async function doAILookupFromCollection() {
   const query = document.getElementById('ai-query-coll').value.trim();
   if (!query) { showToast('Type a set name first!'); return; }
+  if (!checkRateLimit()) return;
   setAILoading(true, 'ai-btn-coll','ai-btn-text-coll','ai-spinner-coll','ai-result-coll');
   try {
     const result = await callClaudeForSetInfo(query);
@@ -1008,12 +1050,12 @@ function renderPriceGuide(filter='') {
 function filterTap(type) {
   if (type === 'owned') {
     setFilter('all', document.querySelector('.filter-btn[onclick*="all"]'));
-    switchSection('collection', null);
+    bottomNav(0, 'collection');
   } else if (type === 'value') {
     // Sort by value descending
     collection.sort((a,b) => (parseFloat(b.value)||0) - (parseFloat(a.value)||0));
     save();
-    renderCollection(activeFilter);
+    bottomNav(0, 'collection');
   } else if (type === 'complete') {
     // Filter to complete items (dolls OR accessories listed)
     const items = collection.filter(x => (x.dolls||[]).length > 0 || (x.accessories||[]).length > 0);
@@ -1061,7 +1103,11 @@ function filterTap(type) {
         </div>`;
       }).join('');
     }
-    switchSection('collection', null);
+    // Update nav indicator + switch section without re-rendering over the custom filter
+    document.querySelectorAll('.nav-item').forEach((el,i)=>el.classList.toggle('active',i===0));
+    document.getElementById('navPill').style.left='calc(10% - 14px)';
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById('section-collection').classList.add('active');
   } else if (type === 'wishlist') {
     bottomNav(1, 'wishlist');
   }
@@ -1305,7 +1351,7 @@ function renderDataTables() {
 }
 
 // INIT
-updateStats(); renderCollection(); renderWishlist(); renderPriceGuide();
+updateStats(); renderCollection(); renderWishlist(); renderPriceGuide(); updateRateLimitUI();
 
 
 // ══ DARK MODE ══
