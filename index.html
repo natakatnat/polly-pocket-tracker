@@ -198,6 +198,28 @@
   .nav-item{min-height:44px;min-width:44px;}
   .filter-btn{min-height:36px;}
   .stat-chip{min-height:44px;}
+  /* Camera button */
+  .camera-btn{width:44px;height:44px;border-radius:var(--r-full);background:var(--surface);border:1.5px solid #D9C6F0;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;color:#7A50A0;}
+  .camera-btn:hover{background:#EDE0F8;border-color:#A07AB0;}
+  .camera-btn:active{transform:scale(.93);}
+
+  /* Expandable wishlist cards */
+  .wish-card{background:var(--surface);border-radius:var(--r-lg);border:1px solid var(--outline);margin-bottom:10px;box-shadow:0 2px 8px var(--shadow);overflow:hidden;transition:box-shadow .2s;}
+  .wish-card:hover{box-shadow:0 4px 16px var(--shadow);}
+  .wish-card-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;user-select:none;}
+  .wish-card-header:active{background:var(--cream);}
+  .wish-chevron{width:18px;height:18px;flex-shrink:0;color:var(--text-muted);transition:transform .25s;}
+  .wish-card.open .wish-chevron{transform:rotate(180deg);}
+  .wish-card-body{display:none;padding:0 16px 14px;border-top:1px solid var(--outline);}
+  .wish-card.open .wish-card-body{display:block;animation:fadeIn .2s ease;}
+  .wish-detail-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;padding-top:12px;}
+  .wish-got-btn{width:100%;padding:13px;border-radius:var(--r-full);background:linear-gradient(135deg,#C07AB0,#8060A0);color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;border:none;cursor:pointer;margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;box-shadow:0 3px 12px rgba(160,122,176,.3);}
+  .wish-got-btn:active{transform:scale(.97);}
+  .wish-got-btn:disabled{opacity:.6;cursor:not-allowed;}
+  .wish-got-spinner{display:none;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;}
+  .wish-got-btn.loading .wish-got-spinner{display:block;}
+  .wish-got-btn.loading .wish-got-label{display:none;}
+
   /* Wishlist star tooltip */
   .wish-star-btn{position:relative;}
   .wish-star-btn::after{content:attr(data-tooltip);position:absolute;bottom:calc(100% + 8px);right:0;background:var(--text);color:#fff;font-size:11px;font-weight:500;padding:5px 10px;border-radius:var(--r-full);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;transform:translateY(4px);}
@@ -275,7 +297,11 @@
         Look up any vintage set — get prices &amp; add to collection
       </div>
       <div class="ai-input-row">
-        <input class="ai-input" id="ai-query-coll" placeholder="e.g. Polly's Magical Mansion…" type="text" onkeydown="if(event.key==='Enter')doAILookupFromCollection()" aria-label="Search for a Polly Pocket set">
+        <button class="camera-btn" onclick="triggerCamera()" aria-label="Identify set from photo" title="Identify from photo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </button>
+        <input type="file" id="camera-file-input" accept="image/*" capture="environment" style="display:none" onchange="handleCameraInput(this)">
+        <input class="ai-input" id="ai-query-coll" placeholder="Set name, doll, accessory, or compact shape…" type="text" onkeydown="if(event.key==='Enter')doAILookupFromCollection()" aria-label="Search for a Polly Pocket set by name, doll, accessory or shape">
         <button class="ai-btn" id="ai-btn-coll" onclick="doAILookupFromCollection()" aria-label="Look up set">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           <span id="ai-btn-text-coll">Look up</span>
@@ -1018,7 +1044,16 @@ function renderCollection(filter='', textFilter='') {
   const list = document.getElementById('collection-list');
   const emptyDiv = document.getElementById('collection-empty');
   let items = collection;
-  if (textFilter) items = items.filter(x=>x.name.toLowerCase().includes(textFilter.toLowerCase()));
+  if (textFilter) {
+    const t = textFilter.toLowerCase();
+    items = items.filter(x=>
+      (x.name||'').toLowerCase().includes(t) ||
+      (x.house||'').toLowerCase().includes(t) ||
+      (x.maker||'').toLowerCase().includes(t) ||
+      (x.dolls||[]).some(d=>(d||'').toLowerCase().includes(t)) ||
+      (x.accessories||[]).some(a=>(a||'').toLowerCase().includes(t))
+    );
+  }
   if (filter==='complete')   items=items.filter(x=>(x.included||[]).length>=3);
   if (filter==='incomplete') items=items.filter(x=>(x.included||[]).length<3);
   if (filter==='1980s')      items=items.filter(x=>x.year>=1983&&x.year<=1989);
@@ -1088,25 +1123,44 @@ function renderWishlist() {
     list.innerHTML=`<div class="empty"><div class="ico"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#A07AB0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div><h3>Wishlist empty</h3><p>Add sets you're hunting and let AI suggest target prices.</p></div>`;
     return;
   }
-  const pc = {'Must Have':'#F7C5D5','Want It':'#FAE8A4','Nice to Have':'#E8E8E8'};
   const dot = {'Must Have':'#C0507A','Want It':'#D4A020','Nice to Have':'#9B8FB0'};
   const label = p => p ? p.replace(/^[^\w]*/,'').trim() : 'Want It';
+  const chevronSVG = `<svg class="wish-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
   list.innerHTML = wishlist.map((item,i)=>{
     const dotColor = dot[item.priority] || '#9B8FB0';
+    const dolls = (item.dolls||[]).filter(Boolean);
+    const accs  = (item.accessories||[]).filter(Boolean);
+    const personIcon = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5 21v-1a7 7 0 0114 0v1"/></svg>`;
+    const sparkleIcon = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>`;
     return `
-    <div class="wishlist-item">
-      <div class="wish-dot" style="background:${escapeHTML(dotColor)}"></div>
-      <div style="flex:1;">
-        <div class="wish-name">${escapeHTML(item.name)}</div>
-        <div style="font-size:12px;color:var(--text-muted);">${escapeHTML(item.year||'?')} · ${escapeHTML(label(item.priority))}</div>
-        ${item.notes?`<div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${escapeHTML(item.notes)}</div>`:''}
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
-        <div class="wish-price">$${parseFloat(item.price||0).toFixed(0)}</div>
-        <div style="display:flex;gap:5px;">
-          <a href="${buildEbayUrl(item.name)}" target="_blank" style="font-size:10px;padding:4px 8px;border-radius:20px;background:#E4EDFC;color:#1A55B0;font-weight:600;text-decoration:none;">eBay</a>
-          <button onclick="moveToCollection(${i})" style="font-size:10px;padding:4px 8px;border-radius:20px;background:var(--lilac);border:none;color:#5A2A90;cursor:pointer;font-weight:600;">Got it!</button>
+    <div class="wish-card" id="wish-card-${i}">
+      <div class="wish-card-header" onclick="toggleWishCard(${i})">
+        <div class="wish-dot" style="background:${escapeHTML(dotColor)};width:10px;height:10px;border-radius:50%;flex-shrink:0;"></div>
+        <div style="flex:1;min-width:0;">
+          <div class="wish-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(item.name)}</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:1px;">${escapeHTML(item.year||'?')} · ${escapeHTML(label(item.priority))}</div>
         </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+          <div class="wish-price">$${parseFloat(item.price||0).toFixed(0)}</div>
+          ${chevronSVG}
+        </div>
+      </div>
+      <div class="wish-card-body">
+        <div class="wish-detail-row">
+          <div>
+            ${item.house?`<div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">Compact: <strong style="color:var(--text);">${escapeHTML(item.house)}</strong></div>`:''}
+            ${item.maker?`<div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">Maker: <strong style="color:var(--text);">${escapeHTML(item.maker)}</strong></div>`:''}
+          </div>
+          <a href="${buildEbayUrl(item.name)}" target="_blank" style="font-size:11px;padding:5px 10px;border-radius:20px;background:#E4EDFC;color:#1A55B0;font-weight:600;text-decoration:none;white-space:nowrap;flex-shrink:0;">eBay sold</a>
+        </div>
+        ${dolls.length?`<div class="tags" style="margin-bottom:8px;">${dolls.map(d=>`<span class="tag doll" style="display:inline-flex;align-items:center;gap:4px;">${personIcon} ${escapeHTML(d)}</span>`).join('')}</div>`:''}
+        ${accs.length?`<div class="tags" style="margin-bottom:8px;">${accs.map(a=>`<span class="tag acc" style="display:inline-flex;align-items:center;gap:4px;">${sparkleIcon} ${escapeHTML(a)}</span>`).join('')}</div>`:''}
+        ${item.notes?`<div style="font-size:12px;color:var(--text-muted);padding:8px;background:var(--cream);border-radius:12px;margin-bottom:4px;font-style:italic;">${escapeHTML(item.notes)}</div>`:''}
+        <button class="wish-got-btn" id="wish-got-btn-${i}" onclick="gotItWithAI(${i})">
+          <div class="wish-got-spinner"></div>
+          <span class="wish-got-label">Got it! — AI fill details</span>
+        </button>
+        <button onclick="deleteWish(${i})" style="width:100%;padding:10px;border-radius:var(--r-full);background:none;border:1.5px solid var(--outline);color:var(--text-muted);font-size:13px;cursor:pointer;margin-top:6px;font-family:'DM Sans',sans-serif;">Remove from wishlist</button>
       </div>
     </div>`;
   }).join('');
@@ -1315,10 +1369,117 @@ function deleteSet(idx) {
   if (!confirm('Remove "'+collection[idx].name+'" from collection?')) return;
   collection.splice(idx,1); save(); renderCollection(activeFilter);
 }
+// ══ WISHLIST CARD EXPAND / COLLAPSE ══
+function toggleWishCard(i) {
+  const card = document.getElementById('wish-card-'+i);
+  if (card) card.classList.toggle('open');
+}
+
+// ══ ENHANCED "GOT IT!" — AI lookup then pre-fill form ══
+async function gotItWithAI(idx) {
+  const item = wishlist[idx];
+  const btn = document.getElementById('wish-got-btn-'+idx);
+  if (btn) { btn.disabled=true; btn.classList.add('loading'); }
+  try {
+    const result = await callClaudeForSetInfo(item.name);
+    // Remove from wishlist before opening sheet
+    wishlist.splice(idx,1); save(); renderWishlist();
+    openAddSheet();
+    setTimeout(()=>{
+      document.getElementById('f-name').value = result.name || item.name;
+      document.getElementById('f-year').value = result.year || item.year || '';
+      document.getElementById('f-house').value = result.house || '';
+      if (result.maker) document.getElementById('f-maker').value = result.maker;
+      document.getElementById('f-value').value = result.good_price || item.price || '';
+      if (result.notes) document.getElementById('f-notes').value = result.notes;
+      // Pre-fill dolls — all checked (user deselects what they don't have)
+      const dollsContainer = document.getElementById('dolls-rows');
+      if (result.dolls && result.dolls.length) {
+        dollsContainer.innerHTML = result.dolls.map(d=>`
+          <div class="list-input-row">
+            <input class="form-input prefilled" value="${escapeHTML(d)}" type="text">
+            <button onclick="this.parentElement.remove()">−</button>
+          </div>`).join('') + `<div class="list-input-row"><input class="form-input" placeholder="Add another doll…" type="text"><button onclick="addRow('dolls-rows','Doll…')">＋</button></div>`;
+      }
+      // Pre-fill accessories
+      const accContainer = document.getElementById('acc-rows');
+      if (result.accessories && result.accessories.length) {
+        accContainer.innerHTML = result.accessories.map(a=>`
+          <div class="list-input-row">
+            <input class="form-input prefilled" value="${escapeHTML(a)}" type="text">
+            <button onclick="this.parentElement.remove()">−</button>
+          </div>`).join('') + `<div class="list-input-row"><input class="form-input" placeholder="Add another…" type="text"><button onclick="addRow('acc-rows','Accessory…')">＋</button></div>`;
+      }
+      ['f-name','f-year','f-house','f-value'].forEach(id=>{
+        const el=document.getElementById(id); if(el&&el.value) el.classList.add('prefilled');
+      });
+      showToast('Fields pre-filled — remove what you don\'t have!');
+    }, 150);
+  } catch(e) {
+    // Fallback: open sheet with just name/year
+    wishlist.splice(idx,1); save(); renderWishlist();
+    openAddSheet();
+    setTimeout(()=>{ document.getElementById('f-name').value=item.name; document.getElementById('f-year').value=item.year||''; },100);
+    showToast('Moved — fill in details!');
+  }
+}
+
+function deleteWish(idx) {
+  wishlist.splice(idx,1); save(); renderWishlist();
+  showToast('Removed from wishlist');
+}
+
 function moveToCollection(idx) {
-  const item = wishlist[idx]; openAddSheet();
-  setTimeout(()=>{ document.getElementById('f-name').value=item.name; document.getElementById('f-year').value=item.year; },100);
-  wishlist.splice(idx,1); save(); renderWishlist(); showToast('Moved — fill in details!');
+  gotItWithAI(idx);
+}
+
+// ══ CAMERA / IMAGE IDENTIFICATION ══
+function triggerCamera() {
+  document.getElementById('camera-file-input').value = '';
+  document.getElementById('camera-file-input').click();
+}
+
+function handleCameraInput(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('Image too large — use a photo under 5 MB'); return; }
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const dataUrl = e.target.result;
+    const base64 = dataUrl.split(',')[1];
+    const mediaType = file.type || 'image/jpeg';
+    // Show the image preview in the result area as a loading hint
+    const resultEl = document.getElementById('ai-result-coll');
+    resultEl.classList.remove('show');
+    setAILoading(true,'ai-btn-coll','ai-btn-text-coll','ai-spinner-coll','ai-result-coll');
+    document.getElementById('ai-spinner-coll').querySelector('span').textContent = 'Identifying set from photo…';
+    try {
+      const result = await callClaudeWithImage(base64, mediaType);
+      currentCollectionAIResult = result;
+      // Fill in the text field with the identified name
+      document.getElementById('ai-query-coll').value = result.name || '';
+      displayAIResultCollection(result);
+    } catch(e) {
+      showToast('Could not identify set — try a clearer photo');
+      console.error(e);
+    }
+    setAILoading(false,'ai-btn-coll','ai-btn-text-coll','ai-spinner-coll','ai-result-coll');
+    document.getElementById('ai-spinner-coll').querySelector('span').textContent = 'Looking up vintage details';
+  };
+  reader.readAsDataURL(file);
+}
+
+async function callClaudeWithImage(base64, mediaType) {
+  const response = await fetch(WORKER_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ image: { data: base64, mediaType } })
+  });
+  if (!response.ok) throw new Error('Worker error: ' + response.status);
+  const data = await response.json();
+  const text = data.content.map(b=>b.text||'').join('').trim();
+  const clean = text.replace(/```json|```/g,'').trim();
+  return JSON.parse(clean);
 }
 
 // ══ FILTERS ══
