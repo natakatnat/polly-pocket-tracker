@@ -280,7 +280,10 @@
         </div>
         <div class="ai-tags-row" id="res-tags-coll"></div>
         <a class="ebay-link" id="res-ebay-coll" href="#" target="_blank" rel="noopener">🛒 View live eBay sold listings →</a>
-        <button class="ai-fill-btn" onclick="openAddSheetWithAI()">✦ Add this set to collection</button>
+        <div style="display:flex;gap:8px;margin-top:4px;">
+          <button class="ai-fill-btn" style="flex:1;" onclick="openAddSheetWithAI()">✦ Add to Collection</button>
+          <button onclick="addAIResultToWishlist()" style="width:52px;height:44px;border-radius:var(--r-full);background:linear-gradient(135deg,#F7C5D5,#F4A28C);border:none;font-size:22px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:transform .15s;box-shadow:0 2px 8px rgba(240,100,130,.25);" title="Add to Wishlist" onmousedown="this.style.transform='scale(.9)'" onmouseup="this.style.transform=''" ontouchstart="this.style.transform='scale(.9)'" ontouchend="this.style.transform=''">⭐</button>
+        </div>
       </div>
     </div>
 
@@ -712,6 +715,18 @@ function displayAIResultCollection(r) {
   document.getElementById('res-ebay-coll').href = `https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1`;
   document.getElementById('ai-result-coll').classList.add('show');
 }
+function addAIResultToWishlist() {
+  if (!currentCollectionAIResult) return;
+  const r = currentCollectionAIResult;
+  // Check for duplicate
+  if (wishlist.some(w => w.name.toLowerCase() === (r.name||'').toLowerCase())) {
+    showToast('⭐ Already on your wishlist!'); return;
+  }
+  wishlist.push({ name: r.name||'', year: r.year||'', price: r.good_price||0, priority: '💛 Want It', notes: '' });
+  save(); renderWishlist();
+  showToast('⭐ Added to wishlist!');
+}
+
 function openAddSheetWithAI() {
   if (!currentCollectionAIResult) return;
   const r = currentCollectionAIResult;
