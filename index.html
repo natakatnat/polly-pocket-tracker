@@ -225,7 +225,7 @@
   <div class="app-header">
     <div>
       <div class="app-title">Pocket<span>✦</span>Tracker</div>
-      <div class="app-subtitle">Vintage Polly Pocket · AI-Powered</div>
+      <div class="app-subtitle">Vintage Polly Pocket · Collection Tracker</div>
     </div>
     <div style="display:flex;align-items:center;gap:8px;">
       <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" aria-label="Toggle dark mode">🌙</button>
@@ -244,7 +244,7 @@
     <div class="nav-tab active" onclick="switchSection('collection',this)">My Collection</div>
     <div class="nav-tab" onclick="switchSection('wishlist',this)">Wishlist</div>
     <div class="nav-tab" onclick="switchSection('prices',this)">Price Guide</div>
-    <div class="nav-tab" onclick="switchSection('export',this)">Export</div>
+    <div class="nav-tab" onclick="switchSection('export',this)">Data</div>
   </div>
 
   <!-- COLLECTION -->
@@ -283,36 +283,72 @@
     <p style="font-size:11px;color:var(--text-muted);text-align:center;padding:8px 0 16px;">Tap the eBay button on any set for live sold-listing prices.</p>
   </div>
 
-  <!-- EXPORT -->
+  <!-- DATA -->
   <div class="section" id="section-export">
-    <div class="export-card" style="background:linear-gradient(135deg,#B8E8DC,#D9C6F0);">
-      <div class="ico">☁️</div>
-      <h3>Sync to Google Sheets</h3>
-      <p>Push your entire collection and wishlist to <strong>My Polly Pocket Collection</strong> on Google Sheets.</p>
-      <button class="btn-primary" style="background:linear-gradient(135deg,#3A7A5A,#2A5A3A);" onclick="syncToSheets()">☁️ Sync Now</button>
+
+    <!-- In-app Collection Table -->
+    <div class="card" style="overflow-x:auto;margin-bottom:12px;">
+      <div class="card-header">
+        <div class="card-title">📊 Collection Sheet</div>
+        <div style="font-size:11px;color:var(--text-muted);">All your data, right here</div>
+      </div>
+      <div id="data-table-wrap" style="padding:0 0 14px;overflow-x:auto;">
+        <table id="data-table" style="width:100%;border-collapse:collapse;font-size:12px;min-width:560px;">
+          <thead>
+            <tr style="background:var(--cream);border-bottom:1.5px solid var(--outline);">
+              <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text-muted);text-transform:uppercase;font-size:10px;letter-spacing:.5px;white-space:nowrap;">Set Name</th>
+              <th style="padding:8px 6px;text-align:left;font-weight:600;color:var(--text-muted);text-transform:uppercase;font-size:10px;letter-spacing:.5px;">Year</th>
+              <th style="padding:8px 6px;text-align:left;font-weight:600;color:var(--text-muted);text-transform:uppercase;font-size:10px;letter-spacing:.5px;">Maker</th>
+              <th style="padding:8px 6px;text-align:left;font-weight:600;color:var(--text-muted);text-transform:uppercase;font-size:10px;letter-spacing:.5px;">Condition</th>
+              <th style="padding:8px 6px;text-align:right;font-weight:600;color:var(--text-muted);text-transform:uppercase;font-size:10px;letter-spacing:.5px;">Paid</th>
+              <th style="padding:8px 6px;text-align:right;font-weight:600;color:var(--text-muted);text-transform:uppercase;font-size:10px;letter-spacing:.5px;">Value</th>
+              <th style="padding:8px 6px;text-align:left;font-weight:600;color:var(--text-muted);text-transform:uppercase;font-size:10px;letter-spacing:.5px;">Included</th>
+            </tr>
+          </thead>
+          <tbody id="data-table-body"></tbody>
+        </table>
+        <div id="data-table-empty" style="display:none;text-align:center;padding:24px;color:var(--text-muted);font-size:13px;">No collection items yet — add some!</div>
+      </div>
     </div>
-    <div class="export-card" style="background:linear-gradient(135deg,#FAE8A4,#B8E8DC);">
-      <div class="ico">⬇️</div>
-      <h3>Pull from Google Sheets</h3>
-      <p>Restore your collection from Google Sheets onto this device.</p>
-      <button class="btn-primary" style="background:linear-gradient(135deg,#5A7A3A,#3A5A2A);" onclick="pullFromSheets()">⬇️ Pull from Sheets</button>
+
+    <!-- Wishlist Table -->
+    <div class="card" style="overflow-x:auto;margin-bottom:14px;">
+      <div class="card-header">
+        <div class="card-title">⭐ Wishlist Sheet</div>
+      </div>
+      <div style="padding:0 0 14px;overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;min-width:400px;">
+          <thead>
+            <tr style="background:var(--cream);border-bottom:1.5px solid var(--outline);">
+              <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--text-muted);text-transform:uppercase;font-size:10px;letter-spacing:.5px;">Set Name</th>
+              <th style="padding:8px 6px;text-align:left;font-weight:600;color:var(--text-muted);text-transform:uppercase;font-size:10px;letter-spacing:.5px;">Year</th>
+              <th style="padding:8px 6px;text-align:right;font-weight:600;color:var(--text-muted);text-transform:uppercase;font-size:10px;letter-spacing:.5px;">Target $</th>
+              <th style="padding:8px 6px;text-align:left;font-weight:600;color:var(--text-muted);text-transform:uppercase;font-size:10px;letter-spacing:.5px;">Priority</th>
+            </tr>
+          </thead>
+          <tbody id="wish-table-body"></tbody>
+        </table>
+        <div id="wish-table-empty" style="display:none;text-align:center;padding:24px;color:var(--text-muted);font-size:13px;">Wishlist is empty.</div>
+      </div>
     </div>
+
+    <!-- Actions -->
     <div class="export-card">
       <div class="ico">📋</div><h3>Export to Notes</h3>
-      <p>Copy your collection as formatted text to paste into Apple Notes.</p>
-      <button class="btn-primary" onclick="exportToNotes()">Copy Collection to Clipboard</button>
+      <p>Copy your collection as formatted text to paste into Apple Notes or anywhere.</p>
+      <button class="btn-primary" onclick="exportToNotes()">Copy to Clipboard</button>
     </div>
     <div class="export-card" style="background:linear-gradient(135deg,#B8E8DC,#FAE8A4);">
-      <div class="ico">📤</div><h3>Share Sheet</h3>
-      <p>Open the iOS share sheet to send to Notes, Reminders, Airtable, or any app.</p>
-      <button class="btn-primary" style="background:linear-gradient(135deg,#3A9A82,#2A7A62);" onclick="shareCollection()">Open Share Sheet</button>
+      <div class="ico">📤</div><h3>Share</h3>
+      <p>Send your collection to Notes, Reminders, or any other app.</p>
+      <button class="btn-primary" style="background:linear-gradient(135deg,#3A9A82,#2A7A62);" onclick="shareCollection()">Share Collection</button>
     </div>
     <div class="export-card" style="background:linear-gradient(135deg,#FAE8A4,#F7C5D5);">
       <div class="ico">💾</div><h3>Backup Data</h3>
-      <p>Download a JSON backup you can restore anytime.</p>
+      <p>Download a JSON backup of all your data that you can restore anytime.</p>
       <button class="btn-primary" style="background:linear-gradient(135deg,#C07830,#A05020);" onclick="backupData()">Download Backup</button>
     </div>
-    <button class="btn-secondary" onclick="document.getElementById('restoreInput').click()">Restore from Backup</button>
+    <button class="btn-secondary" onclick="document.getElementById('restoreInput').click()">⬆️ Restore from Backup</button>
     <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(this)">
   </div>
 </div>
@@ -324,7 +360,7 @@
   <div class="nav-item active" onclick="bottomNav(0,'collection')"><span class="nav-icon">🏠</span><span class="nav-lbl">Collection</span></div>
   <div class="nav-item" onclick="bottomNav(1,'wishlist')"><span class="nav-icon">⭐</span><span class="nav-lbl">Wishlist</span></div>
   <div class="nav-item" onclick="bottomNav(2,'prices')"><span class="nav-icon">💰</span><span class="nav-lbl">Prices</span></div>
-  <div class="nav-item" onclick="bottomNav(3,'export')"><span class="nav-icon">📤</span><span class="nav-lbl">Export</span></div>
+  <div class="nav-item" onclick="bottomNav(3,'export')"><span class="nav-icon">🗂️</span><span class="nav-lbl">Data</span></div>
 </div>
 
 <!-- ══ ADD SET SHEET ══ -->
@@ -543,9 +579,6 @@
 <div class="toast" id="toast"></div>
 
 <script>
-// ══ GOOGLE SHEETS SYNC ══
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbwfqcb2B1hj3QCXROZG_XlvKnOBoTSmPFDP3kNo9fdACT2mByyFfR5g3nXx74kpxHE-/exec';
-
 // ══ DATA ══
 let collection = JSON.parse(localStorage.getItem('pp_collection')||'[]');
 let wishlist   = JSON.parse(localStorage.getItem('pp_wishlist')||'[]');
@@ -986,6 +1019,7 @@ function switchSection(id, tabEl) {
   if (id==='collection') renderCollection(activeFilter);
   if (id==='wishlist')   renderWishlist();
   if (id==='prices')     renderPriceGuide();
+  if (id==='export')     renderDataTables();
 }
 function bottomNav(idx,section) {
   document.querySelectorAll('.nav-item').forEach((el,i)=>el.classList.toggle('active',i===idx));
@@ -1033,29 +1067,60 @@ function showToast(msg) {
   setTimeout(()=>t.classList.remove('show'),2800);
 }
 
+// ══ DATA TABLES ══
+function renderDataTables() {
+  // Collection table
+  const tbody = document.getElementById('data-table-body');
+  const empty = document.getElementById('data-table-empty');
+  const table = document.getElementById('data-table');
+  if (!collection.length) {
+    table.style.display = 'none';
+    empty.style.display = 'block';
+  } else {
+    table.style.display = '';
+    empty.style.display = 'none';
+    const condStyle = {Mint:'color:#1A6B5A;font-weight:600;', Good:'color:#7A5A10;font-weight:600;', Play:'color:#8B2050;font-weight:600;', Parts:'color:#555;'};
+    tbody.innerHTML = collection.map((x, i) => {
+      const stripe = i % 2 === 0 ? 'background:var(--surface);' : 'background:var(--cream);';
+      const cStyle = condStyle[x.condition] || '';
+      const included = (x.included || []).join(', ') || '—';
+      return `<tr style="${stripe}border-bottom:1px solid var(--outline);">
+        <td style="padding:8px 10px;font-weight:500;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis;">${x.name}</td>
+        <td style="padding:8px 6px;color:var(--text-muted);">${x.year || '?'}</td>
+        <td style="padding:8px 6px;color:var(--text-muted);white-space:nowrap;">${x.maker || 'Bluebird'}</td>
+        <td style="padding:8px 6px;${cStyle}">${x.condition || '—'}</td>
+        <td style="padding:8px 6px;text-align:right;font-family:'Fraunces',serif;">$${parseFloat(x.paid||0).toFixed(2)}</td>
+        <td style="padding:8px 6px;text-align:right;font-family:'Fraunces',serif;color:#A07AB0;font-weight:600;">$${parseFloat(x.value||0).toFixed(2)}</td>
+        <td style="padding:8px 6px;color:var(--text-muted);font-size:11px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${included}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Wishlist table
+  const wbody = document.getElementById('wish-table-body');
+  const wempty = document.getElementById('wish-table-empty');
+  const pc = {'🔥 Must Have':'#C0507A','💛 Want It':'#B07A10','🤍 Nice to Have':'#7A6B82'};
+  if (!wishlist.length) {
+    wempty.style.display = 'block';
+    wbody.innerHTML = '';
+  } else {
+    wempty.style.display = 'none';
+    wbody.innerHTML = wishlist.map((x, i) => {
+      const stripe = i % 2 === 0 ? 'background:var(--surface);' : 'background:var(--cream);';
+      const pColor = pc[x.priority] || 'var(--text-muted)';
+      return `<tr style="${stripe}border-bottom:1px solid var(--outline);">
+        <td style="padding:8px 10px;font-weight:500;">${x.name}</td>
+        <td style="padding:8px 6px;color:var(--text-muted);">${x.year || '?'}</td>
+        <td style="padding:8px 6px;text-align:right;font-family:'Fraunces',serif;color:#A07AB0;font-weight:600;">$${parseFloat(x.price||0).toFixed(0)}</td>
+        <td style="padding:8px 6px;font-size:12px;color:${pColor};font-weight:600;">${x.priority || '—'}</td>
+      </tr>`;
+    }).join('');
+  }
+}
+
 // INIT
 updateStats(); renderCollection(); renderWishlist(); renderPriceGuide();
 
-// ══ GOOGLE SHEETS SYNC FUNCTIONS ══
-async function syncToSheets() {
-  if (!SHEETS_URL || SHEETS_URL.includes('PASTE')) { showToast('⚠️ Sheets URL not configured'); return; }
-  showToast('☁️ Syncing to Google Sheets…');
-  try {
-    await fetch(SHEETS_URL, { method:'POST', body: JSON.stringify({type:'collection', items:collection}), headers:{'Content-Type':'application/json'} });
-    await fetch(SHEETS_URL, { method:'POST', body: JSON.stringify({type:'wishlist', items:wishlist}), headers:{'Content-Type':'application/json'} });
-    showToast('✅ Synced to My Polly Pocket Collection!');
-  } catch(e) { showToast('❌ Sync failed — check your connection'); }
-}
-
-async function pullFromSheets() {
-  if (!SHEETS_URL || SHEETS_URL.includes('PASTE')) { showToast('⚠️ Sheets URL not configured'); return; }
-  showToast('⬇️ Pulling from Google Sheets…');
-  try {
-    const res = await fetch(SHEETS_URL);
-    const data = await res.json();
-    showToast('✅ Collection restored from Sheets!');
-  } catch(e) { showToast('❌ Pull failed — check your connection'); }
-}
 
 // ══ DARK MODE ══
 function toggleDark() {
