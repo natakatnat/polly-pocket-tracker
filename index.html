@@ -27,16 +27,14 @@
 
   /* STATS */
   .stats-row{display:flex;gap:10px;padding:0 20px 16px;}
-  .stat-chip{flex:1;background:var(--surface);border-radius:var(--r-md);padding:12px 10px;text-align:center;box-shadow:0 2px 8px var(--shadow);border:1px solid var(--outline);}
+  .stat-chip{flex:1;background:var(--surface);border-radius:var(--r-md);padding:12px 10px;text-align:center;box-shadow:0 2px 8px var(--shadow);border:1px solid var(--outline);cursor:pointer;transition:transform .15s;user-select:none;}
+  .stat-chip:active{transform:scale(.95);}
   .stat-chip .num{font-family:'Fraunces',serif;font-size:22px;font-weight:600;}
   .stat-chip .lbl{font-size:10px;color:var(--text-muted);margin-top:1px;text-transform:uppercase;letter-spacing:.5px;}
+  .stat-chip .tap-label{font-size:9px;color:var(--text-muted);display:block;margin-top:2px;}
   .stat-chip.blush .num{color:#C0507A;} .stat-chip.lilac .num{color:#7A50C0;} .stat-chip.mint .num{color:#3A9A82;} .stat-chip.butter .num{color:#B07A10;}
 
-  /* TABS */
-  .nav-tabs{display:flex;gap:8px;padding:0 20px 16px;overflow-x:auto;scrollbar-width:none;}
-  .nav-tabs::-webkit-scrollbar{display:none;}
-  .nav-tab{flex-shrink:0;padding:8px 18px;border-radius:var(--r-full);font-size:13px;font-weight:500;border:1.5px solid var(--outline);background:var(--surface);color:var(--text-muted);cursor:pointer;transition:all .2s;white-space:nowrap;}
-  .nav-tab.active{background:var(--text);color:#fff;border-color:var(--text);}
+  /* TABS (removed — only bottom nav) */
 
   /* SECTIONS */
   .section{display:none;padding:0 20px;} .section.active{display:block;}
@@ -74,7 +72,7 @@
   .filter-btn.active{background:var(--blush);border-color:var(--coral);color:#8B2050;}
 
   /* FAB */
-  .fab{position:fixed;bottom:calc(80px + var(--safe-bottom) + 12px);right:20px;width:60px;height:60px;border-radius:var(--r-full);background:linear-gradient(135deg,#C07AB0,#A07AB0);color:#fff;font-size:28px;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(160,122,176,.45);display:flex;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s;z-index:100;}
+  .fab{position:fixed;bottom:calc(80px + var(--safe-bottom) + 12px);right:20px;height:52px;padding:0 24px;border-radius:var(--r-full);background:linear-gradient(135deg,#C07AB0,#A07AB0);color:#fff;font-size:16px;font-weight:600;border:none;cursor:pointer;box-shadow:0 4px 20px rgba(160,122,176,.45);display:flex;align-items:center;justify-content:center;gap:6px;transition:transform .15s,box-shadow .15s;z-index:100;white-space:nowrap;}
   .fab:active{transform:scale(.93);}
 
   /* BOTTOM NAV */
@@ -93,6 +91,8 @@
   .sheet-handle{width:36px;height:4px;background:var(--outline);border-radius:var(--r-full);margin:0 auto 20px;}
   .sheet-title{font-family:'Fraunces',serif;font-size:20px;font-weight:600;margin-bottom:6px;}
   .sheet-subtitle{font-size:13px;color:var(--text-muted);margin-bottom:18px;}
+  .sheet-progress{display:flex;gap:6px;margin-bottom:18px;}
+  .sheet-progress div{flex:1;height:4px;border-radius:99px;transition:background .2s;}
 
   /* ══ AI LOOKUP ZONE ══ */
   .ai-lookup-box{background:linear-gradient(135deg,#EDE0F8,#F7E8F5);border-radius:var(--r-lg);padding:16px;margin-bottom:18px;border:1.5px solid #D9C6F0;}
@@ -154,6 +154,10 @@
   .btn-primary{width:100%;padding:16px;border-radius:var(--r-full);background:linear-gradient(135deg,#C07AB0,#8060A0);color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;border:none;cursor:pointer;margin-top:8px;box-shadow:0 4px 16px rgba(160,122,176,.35);transition:all .15s;}
   .btn-primary:active{transform:scale(.97);}
   .btn-secondary{width:100%;padding:14px;border-radius:var(--r-full);background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;border:1.5px solid var(--outline);cursor:pointer;margin-top:8px;transition:all .15s;}
+  .sheet-back-link{font-size:12px;color:var(--text-muted);cursor:pointer;margin-bottom:16px;display:block;}
+  .sheet-back-link:hover{color:var(--text);}
+  .sheet-next-btn{width:100%;padding:16px;border-radius:var(--r-full);background:linear-gradient(135deg,#C07AB0,#8060A0);color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;border:none;cursor:pointer;margin-top:8px;box-shadow:0 4px 16px rgba(160,122,176,.35);transition:all .15s;}
+  .sheet-next-btn:active{transform:scale(.97);}
 
   /* WISHLIST */
   .wishlist-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface);border-radius:var(--r-md);border:1px solid var(--outline);margin-bottom:10px;box-shadow:0 1px 6px var(--shadow);}
@@ -234,17 +238,10 @@
   </div>
 
   <div class="stats-row">
-    <div class="stat-chip blush"><div class="num" id="statTotal">0</div><div class="lbl">Owned</div></div>
-    <div class="stat-chip lilac"><div class="num" id="statValue">$0</div><div class="lbl">Est. Value</div></div>
-    <div class="stat-chip mint"><div class="num" id="statComplete">0%</div><div class="lbl">Complete</div></div>
-    <div class="stat-chip butter"><div class="num" id="statWish">0</div><div class="lbl">Wishlist</div></div>
-  </div>
-
-  <div class="nav-tabs">
-    <div class="nav-tab active" onclick="switchSection('collection',this)">My Collection</div>
-    <div class="nav-tab" onclick="switchSection('wishlist',this)">Wishlist</div>
-    <div class="nav-tab" onclick="switchSection('prices',this)">Price Guide</div>
-    <div class="nav-tab" onclick="switchSection('export',this)">Data</div>
+    <div class="stat-chip blush" onclick="filterTap('owned')"><div class="num" id="statTotal">0</div><div class="lbl">Owned</div><span class="tap-label">tap to filter ↓</span></div>
+    <div class="stat-chip lilac" onclick="filterTap('value')"><div class="num" id="statValue">$0</div><div class="lbl">Est. Value</div><span class="tap-label">tap to filter ↓</span></div>
+    <div class="stat-chip mint" onclick="filterTap('complete')"><div class="num" id="statComplete">0%</div><div class="lbl">Complete</div><span class="tap-label">tap to filter ↓</span></div>
+    <div class="stat-chip butter" onclick="filterTap('wishlist')"><div class="num" id="statWish">0</div><div class="lbl">Wishlist</div><span class="tap-label">tap to switch ↓</span></div>
   </div>
 
   <!-- COLLECTION -->
@@ -253,6 +250,39 @@
       <span class="search-icon">🔍</span>
       <input type="text" placeholder="Search your collection…" oninput="filterCollection(this.value)">
     </div>
+    <p style="font-size:10px;color:#A07AB0;margin-top:6px;margin-left:4px;">AI lookup — enter a set name to get price data.</p>
+
+    <!-- AI LOOKUP moved here -->
+    <div class="ai-lookup-box" id="collection-ai-lookup">
+      <div class="ai-input-row">
+        <input class="ai-input" id="ai-query-coll" placeholder="e.g. Polly's Magical Mansion…" type="text" onkeydown="if(event.key==='Enter')doAILookupFromCollection()">
+        <button class="ai-btn" id="ai-btn-coll" onclick="doAILookupFromCollection()">
+          <span id="ai-btn-text-coll">Search ✨</span>
+        </button>
+      </div>
+      <div class="ai-spinner" id="ai-spinner-coll">
+        <div class="spinner"></div>
+        <span>Looking up vintage details<span class="typing-dots"><span></span><span></span><span></span></span></span>
+      </div>
+      <div class="ai-result" id="ai-result-coll">
+        <div class="ai-result-header">
+          <div>
+            <div class="ai-result-name" id="res-name-coll"></div>
+            <div class="ai-result-year" id="res-year-coll"></div>
+          </div>
+          <div class="ai-confidence" id="res-conf-coll"></div>
+        </div>
+        <div class="ai-price-row">
+          <div class="ai-price-chip"><div class="apc-val" id="res-play-coll"></div><div class="apc-lbl">Play Worn</div></div>
+          <div class="ai-price-chip"><div class="apc-val" id="res-good-coll"></div><div class="apc-lbl">Good</div></div>
+          <div class="ai-price-chip"><div class="apc-val" id="res-mint-coll"></div><div class="apc-lbl">Mint/MIB</div></div>
+        </div>
+        <div class="ai-tags-row" id="res-tags-coll"></div>
+        <a class="ebay-link" id="res-ebay-coll" href="#" target="_blank" rel="noopener">🛒 View live eBay sold listings →</a>
+        <button class="ai-fill-btn" onclick="openAddSheetWithAI()">✦ Add this set to collection</button>
+      </div>
+    </div>
+
     <div class="filter-row">
       <div class="filter-btn active" onclick="setFilter('all',this)">All</div>
       <div class="filter-btn" onclick="setFilter('complete',this)">Complete</div>
@@ -262,6 +292,12 @@
       <div class="filter-btn" onclick="setFilter('bluebird',this)">Bluebird</div>
     </div>
     <div id="collection-list"></div>
+    <div class="empty" id="collection-empty" style="display:none;">
+      <div class="ico">🏠</div>
+      <h3>No sets yet!</h3>
+      <p>Start building your vintage collection.<br>Use AI lookup to find any set instantly.</p>
+      <button class="btn-primary" style="margin-top:20px;width:auto;padding:14px 28px;" onclick="openSheet()">＋ Add your first set</button>
+    </div>
   </div>
 
   <!-- WISHLIST -->
@@ -283,7 +319,7 @@
     <p style="font-size:11px;color:var(--text-muted);text-align:center;padding:8px 0 16px;">Tap the eBay button on any set for live sold-listing prices.</p>
   </div>
 
-  <!-- DATA -->
+  <!-- SHEET VIEW (renamed from DATA) -->
   <div class="section" id="section-export">
 
     <!-- In-app Collection Table -->
@@ -353,14 +389,14 @@
   </div>
 </div>
 
-<button class="fab" onclick="openAddSheet()">＋</button>
+<button class="fab" id="fab" onclick="openAddSheet()">＋ Add Set</button>
 
 <div class="bottom-nav" id="bottomNav">
   <div class="nav-pill" id="navPill" style="left:calc(10% - 14px)"></div>
   <div class="nav-item active" onclick="bottomNav(0,'collection')"><span class="nav-icon">🏠</span><span class="nav-lbl">Collection</span></div>
   <div class="nav-item" onclick="bottomNav(1,'wishlist')"><span class="nav-icon">⭐</span><span class="nav-lbl">Wishlist</span></div>
   <div class="nav-item" onclick="bottomNav(2,'prices')"><span class="nav-icon">💰</span><span class="nav-lbl">Prices</span></div>
-  <div class="nav-item" onclick="bottomNav(3,'export')"><span class="nav-icon">🗂️</span><span class="nav-lbl">Data</span></div>
+  <div class="nav-item" onclick="bottomNav(3,'export')"><span class="nav-icon">🗂️</span><span class="nav-lbl">Sheet View</span></div>
 </div>
 
 <!-- ══ ADD SET SHEET ══ -->
@@ -370,149 +406,123 @@
     <div class="sheet-title">Add a Set ✦</div>
     <div class="sheet-subtitle">Type a name below and let AI fill in the details ✨</div>
 
-    <!-- AI LOOKUP -->
-    <div class="ai-lookup-box">
-      <div class="ai-lookup-label"><span class="spark">✨</span> AI Lookup — type any set name</div>
-      <div class="ai-input-row">
-        <input class="ai-input" id="ai-query" placeholder="e.g. Polly's Magical Mansion…" type="text" onkeydown="if(event.key==='Enter')doAILookup()">
-        <button class="ai-btn" id="ai-btn" onclick="doAILookup()">
-          <span id="ai-btn-text">Search ✨</span>
-        </button>
-      </div>
+    <!-- TWO-STEP PROGRESS BAR -->
+    <div class="sheet-progress" style="display:flex;gap:6px;margin-bottom:18px;">
+      <div id="prog-1" style="flex:1;height:4px;border-radius:99px;background:#A07AB0;transition:background .2s;"></div>
+      <div id="prog-2" style="flex:1;height:4px;border-radius:99px;background:var(--outline);transition:background .2s;"></div>
+    </div>
 
-      <!-- Spinner -->
-      <div class="ai-spinner" id="ai-spinner">
-        <div class="spinner"></div>
-        <span>Looking up vintage details<span class="typing-dots"><span></span><span></span><span></span></span></span>
+    <!-- STEP 1 -->
+    <div id="sheet-step-1">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Set Name *</label>
+          <input class="form-input" id="f-name" placeholder="e.g. Polly's House" type="text">
+        </div>
+        <div class="form-group" style="max-width:90px;">
+          <label class="form-label">Year *</label>
+          <input class="form-input" id="f-year" placeholder="1989" type="number" min="1983" max="2000">
+        </div>
       </div>
+      <div class="form-group">
+        <label class="form-label">House / Compact Shape</label>
+        <input class="form-input" id="f-house" placeholder="e.g. Clamshell compact, Treehouse…">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Manufacturer</label>
+          <select class="form-select" id="f-maker">
+            <option value="Bluebird">Bluebird (UK)</option>
+            <option value="Mattel">Mattel</option>
+            <option value="Unknown">Unknown</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Condition</label>
+          <select class="form-select" id="f-condition">
+            <option value="Mint">Mint (MIB)</option>
+            <option value="Good">Good</option>
+            <option value="Play">Play Worn</option>
+            <option value="Parts">Parts Only</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Notes</label>
+        <textarea class="form-textarea" id="f-notes" placeholder="Any notes (source, seller, memories…)"></textarea>
+      </div>
+      <button class="sheet-next-btn" onclick="nextSheetStep()">Next →</button>
+    </div>
 
-      <!-- AI Result -->
-      <div class="ai-result" id="ai-result">
-        <div class="ai-result-header">
-          <div>
-            <div class="ai-result-name" id="res-name"></div>
-            <div class="ai-result-year" id="res-year"></div>
+    <!-- STEP 2 -->
+    <div id="sheet-step-2" style="display:none;">
+      <a class="sheet-back-link" onclick="prevSheetStep()">← Back</a>
+
+      <div class="form-group">
+        <label class="form-label">Dolls Included</label>
+        <div id="dolls-rows">
+          <div class="list-input-row">
+            <input class="form-input" placeholder="Doll name (e.g. Polly, Lila…)" type="text">
+            <button onclick="addRow('dolls-rows','Doll name (e.g. Polly, Lila…)')">＋</button>
           </div>
-          <div class="ai-confidence" id="res-conf"></div>
-        </div>
-        <div class="ai-price-row">
-          <div class="ai-price-chip"><div class="apc-val" id="res-play"></div><div class="apc-lbl">Play Worn</div></div>
-          <div class="ai-price-chip"><div class="apc-val" id="res-good"></div><div class="apc-lbl">Good</div></div>
-          <div class="ai-price-chip"><div class="apc-val" id="res-mint"></div><div class="apc-lbl">Mint/MIB</div></div>
-        </div>
-        <div class="ai-tags-row" id="res-tags"></div>
-        <a class="ebay-link" id="res-ebay" href="#" target="_blank" rel="noopener">🛒 View live eBay sold listings →</a>
-        <button class="ai-fill-btn" onclick="applyAIResult()">✦ Prefill all fields below</button>
-      </div>
-    </div>
-
-    <!-- INDICATOR when prefilled -->
-    <div id="prefill-badge" style="display:none">
-      <span class="prefill-badge">✨ AI prefilled · edit anything below</span>
-    </div>
-
-    <!-- MANUAL FORM -->
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Set Name *</label>
-        <input class="form-input" id="f-name" placeholder="e.g. Polly's House" type="text">
-      </div>
-      <div class="form-group" style="max-width:90px;">
-        <label class="form-label">Year *</label>
-        <input class="form-input" id="f-year" placeholder="1989" type="number" min="1983" max="2000">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">House / Compact Shape</label>
-      <input class="form-input" id="f-house" placeholder="e.g. Clamshell compact, Treehouse…">
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Manufacturer</label>
-        <select class="form-select" id="f-maker">
-          <option value="Bluebird">Bluebird (UK)</option>
-          <option value="Mattel">Mattel</option>
-          <option value="Unknown">Unknown</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Condition</label>
-        <select class="form-select" id="f-condition">
-          <option value="Mint">Mint (MIB)</option>
-          <option value="Good">Good</option>
-          <option value="Play">Play Worn</option>
-          <option value="Parts">Parts Only</option>
-        </select>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Dolls Included</label>
-      <div id="dolls-rows">
-        <div class="list-input-row">
-          <input class="form-input" placeholder="Doll name (e.g. Polly, Lila…)" type="text">
-          <button onclick="addRow('dolls-rows','Doll name (e.g. Polly, Lila…)')">＋</button>
         </div>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Accessories / Furniture</label>
-      <div id="acc-rows">
-        <div class="list-input-row">
-          <input class="form-input" placeholder="Accessory (e.g. tiny sofa, pool…)" type="text">
-          <button onclick="addRow('acc-rows','Accessory (e.g. tiny sofa, pool…)')">＋</button>
+      <div class="form-group">
+        <label class="form-label">Accessories / Furniture</label>
+        <div id="acc-rows">
+          <div class="list-input-row">
+            <input class="form-input" placeholder="Accessory (e.g. tiny sofa, pool…)" type="text">
+            <button onclick="addRow('acc-rows','Accessory (e.g. tiny sofa, pool…)')">＋</button>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="form-row">
       <div class="form-group">
-        <label class="form-label">Paid ($)</label>
-        <input class="form-input" id="f-paid" placeholder="0.00" type="number" min="0" step="0.01">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Est. Value ($)</label>
-        <input class="form-input" id="f-value" placeholder="0.00" type="number" min="0" step="0.01">
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">What's included?</label>
-      <div class="chip-group" id="chips-included">
-        <div class="chip-opt" onclick="toggleChip(this)">House/Compact</div>
-        <div class="chip-opt" onclick="toggleChip(this)">All Dolls</div>
-        <div class="chip-opt" onclick="toggleChip(this)">All Accessories</div>
-        <div class="chip-opt" onclick="toggleChip(this)">Box/Insert</div>
-        <div class="chip-opt" onclick="toggleChip(this)">Sticker Sheet</div>
-        <div class="chip-opt" onclick="toggleChip(this)">Instructions</div>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Card Color</label>
-      <div class="chip-group" id="color-chips">
-        <div class="chip-opt" onclick="selectColor(this,'#F7C5D5')" style="background:#F7C5D5;border-color:#F4A28C;">🌸 Blush</div>
-        <div class="chip-opt selected" onclick="selectColor(this,'#D9C6F0')" style="background:#D9C6F0;border-color:#A07AB0;color:#5A2A90;">💜 Lilac</div>
-        <div class="chip-opt" onclick="selectColor(this,'#B8E8DC')" style="background:#B8E8DC;border-color:#3A9A82;">🌿 Mint</div>
-        <div class="chip-opt" onclick="selectColor(this,'#FAE8A4')" style="background:#FAE8A4;border-color:#D4A020;">☀️ Butter</div>
-        <div class="chip-opt" onclick="selectColor(this,'#BDDFF5')" style="background:#BDDFF5;border-color:#5099C5;">🩵 Sky</div>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Notes</label>
-      <textarea class="form-textarea" id="f-notes" placeholder="Any notes (source, seller, memories…)"></textarea>
-    </div>
-    <div class="form-group">
-      <label class="form-label">📸 Photo</label>
-      <div class="photo-upload-area" id="photo-upload-area">
-        <input type="file" accept="image/*" id="f-photo" onchange="handlePhotoUpload(this)">
-        <div class="photo-placeholder" id="photo-placeholder">
-          <div style="font-size:32px;margin-bottom:6px;">📷</div>
-          <div style="font-size:14px;font-weight:500;color:var(--text-muted);">Tap to add a photo</div>
-          <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Camera roll or file</div>
+        <label class="form-label">What's included?</label>
+        <div class="chip-group" id="chips-included">
+          <div class="chip-opt" onclick="toggleChip(this)">House/Compact</div>
+          <div class="chip-opt" onclick="toggleChip(this)">All Dolls</div>
+          <div class="chip-opt" onclick="toggleChip(this)">All Accessories</div>
+          <div class="chip-opt" onclick="toggleChip(this)">Box/Insert</div>
+          <div class="chip-opt" onclick="toggleChip(this)">Sticker Sheet</div>
+          <div class="chip-opt" onclick="toggleChip(this)">Instructions</div>
         </div>
-        <img class="photo-preview-img" id="photo-preview-img" src="" alt="Set photo">
       </div>
-      <button type="button" id="photo-clear-btn" onclick="clearPhoto()" style="display:none;width:100%;padding:10px;border-radius:var(--r-full);border:1.5px solid var(--outline);background:var(--cream);font-size:13px;color:#8B2050;cursor:pointer;margin-top:8px;font-family:'DM Sans',sans-serif;">🗑 Remove photo</button>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Paid ($)</label>
+          <input class="form-input" id="f-paid" placeholder="0.00" type="number" min="0" step="0.01">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Est. Value ($)</label>
+          <input class="form-input" id="f-value" placeholder="0.00" type="number" min="0" step="0.01">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Card Color</label>
+        <div class="chip-group" id="color-chips">
+          <div class="chip-opt" onclick="selectColor(this,'#F7C5D5')" style="background:#F7C5D5;border-color:#F4A28C;">🌸 Blush</div>
+          <div class="chip-opt selected" onclick="selectColor(this,'#D9C6F0')" style="background:#D9C6F0;border-color:#A07AB0;color:#5A2A90;">💜 Lilac</div>
+          <div class="chip-opt" onclick="selectColor(this,'#B8E8DC')" style="background:#B8E8DC;border-color:#3A9A82;">🌿 Mint</div>
+          <div class="chip-opt" onclick="selectColor(this,'#FAE8A4')" style="background:#FAE8A4;border-color:#D4A020;">☀️ Butter</div>
+          <div class="chip-opt" onclick="selectColor(this,'#BDDFF5')" style="background:#BDDFF5;border-color:#5099C5;">🩵 Sky</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">📸 Photo</label>
+        <div class="photo-upload-area" id="photo-upload-area">
+          <input type="file" accept="image/*" id="f-photo" onchange="handlePhotoUpload(this)">
+          <div class="photo-placeholder" id="photo-placeholder">
+            <div style="font-size:32px;margin-bottom:6px;">📷</div>
+            <div style="font-size:14px;font-weight:500;color:var(--text-muted);">Tap to add a photo</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">Camera roll or file</div>
+          </div>
+          <img class="photo-preview-img" id="photo-preview-img" src="" alt="Set photo">
+        </div>
+        <button type="button" id="photo-clear-btn" onclick="clearPhoto()" style="display:none;width:100%;padding:10px;border-radius:var(--r-full);border:1.5px solid var(--outline);background:var(--cream);font-size:13px;color:#8B2050;cursor:pointer;margin-top:8px;font-family:'DM Sans',sans-serif;">🗑 Remove photo</button>
+      </div>
+      <button class="btn-primary" onclick="saveSet()">Save to Collection ✦</button>
+      <button class="btn-secondary" onclick="closeSheet('addSheet')">Cancel</button>
     </div>
-    <button class="btn-primary" onclick="saveSet()">Save to Collection ✦</button>
-    <button class="btn-secondary" onclick="closeSheet('addSheet')">Cancel</button>
   </div>
 </div>
 
@@ -587,6 +597,7 @@ let activeFilter  = 'all';
 let currentAIResult = null;
 let currentWAIResult = null;
 let currentPhotoData = null;
+let currentCollectionAIResult = null;
 
 const priceGuide = [
   {name:"Polly's Town House",year:1989,maker:"Bluebird",low:45,high:120,color:"#F7C5D5"},
@@ -606,7 +617,95 @@ const priceGuide = [
   {name:"Polly's Wedding Chapel",year:1997,maker:"Bluebird",low:45,high:115,color:"#D9C6F0"},
 ];
 
-// ══ AI LOOKUP ══
+// ══ TWO-STEP SHEET LOGIC ══
+function nextSheetStep() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { showToast('Please enter a set name'); return; }
+  document.getElementById('sheet-step-1').style.display = 'none';
+  document.getElementById('sheet-step-2').style.display = 'block';
+  document.getElementById('prog-1').style.background = '#A07AB0';
+  document.getElementById('prog-2').style.background = '#A07AB0';
+}
+function prevSheetStep() {
+  document.getElementById('sheet-step-1').style.display = 'block';
+  document.getElementById('sheet-step-2').style.display = 'none';
+  document.getElementById('prog-1').style.background = '#A07AB0';
+  document.getElementById('prog-2').style.background = 'var(--outline)';
+}
+function resetSheetSteps() {
+  document.getElementById('sheet-step-1').style.display = 'block';
+  document.getElementById('sheet-step-2').style.display = 'none';
+  document.getElementById('prog-1').style.background = '#A07AB0';
+  document.getElementById('prog-2').style.background = 'var(--outline)';
+}
+
+// ══ AI LOOKUP FROM COLLECTION ══
+async function doAILookupFromCollection() {
+  const query = document.getElementById('ai-query-coll').value.trim();
+  if (!query) { showToast('Type a set name first!'); return; }
+  setAILoading(true, 'ai-btn-coll','ai-btn-text-coll','ai-spinner-coll','ai-result-coll');
+  try {
+    const result = await callClaudeForSetInfo(query);
+    currentCollectionAIResult = result;
+    displayAIResultCollection(result);
+  } catch(e) {
+    showToast('Lookup failed — fill in manually');
+    console.error(e);
+  }
+  setAILoading(false,'ai-btn-coll','ai-btn-text-coll','ai-spinner-coll','ai-result-coll');
+}
+function displayAIResultCollection(r) {
+  document.getElementById('res-name-coll').textContent = r.name || '—';
+  document.getElementById('res-year-coll').textContent = `${r.year||'?'} · ${r.maker||'Bluebird'}`;
+  document.getElementById('res-play-coll').textContent = `$${r.play_price||'?'}`;
+  document.getElementById('res-good-coll').textContent = `$${r.good_price||'?'}`;
+  document.getElementById('res-mint-coll').textContent = `$${r.mint_price||'?'}`;
+  const conf = document.getElementById('res-conf-coll');
+  conf.textContent = r.confidence === 'high' ? '✓ High confidence' : r.confidence === 'medium' ? '~ Medium' : '? Low confidence';
+  conf.className = 'ai-confidence conf-'+(r.confidence||'med').replace('medium','med');
+  const tags = document.getElementById('res-tags-coll');
+  const items = [...(r.dolls||[]).map(d=>`<span class="ai-tag tag doll">🪆 ${d}</span>`), ...(r.accessories||[]).slice(0,6).map(a=>`<span class="ai-tag tag acc">🎀 ${a}</span>`)];
+  tags.innerHTML = items.join('');
+  const q = encodeURIComponent(`vintage polly pocket "${r.name||r.name}" sold`);
+  document.getElementById('res-ebay-coll').href = `https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1`;
+  document.getElementById('ai-result-coll').classList.add('show');
+}
+function openAddSheetWithAI() {
+  if (!currentCollectionAIResult) return;
+  const r = currentCollectionAIResult;
+  openAddSheet();
+  setTimeout(()=>{
+    document.getElementById('f-name').value = r.name || '';
+    document.getElementById('f-year').value = r.year || '';
+    document.getElementById('f-house').value = r.house || '';
+    if (r.maker) document.getElementById('f-maker').value = r.maker;
+    document.getElementById('f-value').value = r.good_price || '';
+    if (r.notes) document.getElementById('f-notes').value = r.notes;
+    const dollsContainer = document.getElementById('dolls-rows');
+    if (r.dolls && r.dolls.length) {
+      dollsContainer.innerHTML = r.dolls.map(d=>`
+        <div class="list-input-row">
+          <input class="form-input prefilled" value="${escapeHTML(d)}" type="text">
+          <button onclick="addRow('dolls-rows','Doll name…')">＋</button>
+        </div>`).join('') + `<div class="list-input-row"><input class="form-input" placeholder="Add another doll…" type="text"><button onclick="addRow('dolls-rows','Doll…')">＋</button></div>`;
+    }
+    const accContainer = document.getElementById('acc-rows');
+    if (r.accessories && r.accessories.length) {
+      accContainer.innerHTML = r.accessories.map(a=>`
+        <div class="list-input-row">
+          <input class="form-input prefilled" value="${escapeHTML(a)}" type="text">
+          <button onclick="addRow('acc-rows','Accessory…')">＋</button>
+        </div>`).join('') + `<div class="list-input-row"><input class="form-input" placeholder="Add another…" type="text"><button onclick="addRow('acc-rows','Accessory…')">＋</button></div>`;
+    }
+    ['f-name','f-year','f-house','f-value'].forEach(id=>{
+      const el = document.getElementById(id);
+      if (el.value) el.classList.add('prefilled');
+    });
+    showToast('✨ Fields prefilled! Edit anything you need.');
+  }, 100);
+}
+
+// ══ AI LOOKUP (wishlist) ══
 async function doAILookup() {
   const query = document.getElementById('ai-query').value.trim();
   if (!query) { showToast('Type a set name first!'); return; }
@@ -729,7 +828,6 @@ function applyAIResult() {
     if (el.value) el.classList.add('prefilled');
   });
 
-  document.getElementById('prefill-badge').style.display = 'block';
   showToast('✨ Fields prefilled! Edit anything you need.');
 
   // Scroll to form
@@ -773,10 +871,27 @@ function updateStats() {
   const complete = collection.filter(x=>(x.included||[]).length>=3).length;
   document.getElementById('statComplete').textContent = collection.length ? Math.round(complete/collection.length*100)+'%' : '0%';
   document.getElementById('statWish').textContent = wishlist.length;
+  updateFABState();
+}
+
+function updateFABState() {
+  const fab = document.getElementById('fab');
+  if (collection.length === 0) {
+    fab.style.display = 'none';
+  } else {
+    fab.style.display = 'flex';
+  }
+  const emptyDiv = document.getElementById('collection-empty');
+  if (collection.length === 0) {
+    emptyDiv.style.display = 'block';
+  } else {
+    emptyDiv.style.display = 'none';
+  }
 }
 
 function renderCollection(filter='', textFilter='') {
   const list = document.getElementById('collection-list');
+  const emptyDiv = document.getElementById('collection-empty');
   let items = collection;
   if (textFilter) items = items.filter(x=>x.name.toLowerCase().includes(textFilter.toLowerCase()));
   if (filter==='complete')   items=items.filter(x=>(x.included||[]).length>=3);
@@ -786,9 +901,15 @@ function renderCollection(filter='', textFilter='') {
   if (filter==='bluebird')   items=items.filter(x=>x.maker==='Bluebird');
 
   if (!items.length) {
-    list.innerHTML=`<div class="empty"><div class="ico">🏠</div><h3>No sets yet!</h3><p>Tap + and use AI Lookup to fill details automatically.</p></div>`;
+    list.innerHTML='';
+    if (collection.length === 0) {
+      emptyDiv.style.display = 'block';
+    } else {
+      emptyDiv.style.display = 'none';
+    }
     return;
   }
+  emptyDiv.style.display = 'none';
 
   list.innerHTML = items.map(item=>{
     const idx = collection.indexOf(item);
@@ -883,8 +1004,76 @@ function renderPriceGuide(filter='') {
   }).join('');
 }
 
+// ══ TAPPABLE STAT CHIPS ══
+function filterTap(type) {
+  if (type === 'owned') {
+    setFilter('all', document.querySelector('.filter-btn[onclick*="all"]'));
+    switchSection('collection', null);
+  } else if (type === 'value') {
+    // Sort by value descending
+    collection.sort((a,b) => (parseFloat(b.value)||0) - (parseFloat(a.value)||0));
+    save();
+    renderCollection(activeFilter);
+  } else if (type === 'complete') {
+    // Filter to complete items (dolls OR accessories listed)
+    const items = collection.filter(x => (x.dolls||[]).length > 0 || (x.accessories||[]).length > 0);
+    if (items.length) {
+      document.getElementById('collection-list').innerHTML = items.map(item=>{
+        const idx = collection.indexOf(item);
+        const dolls = (item.dolls||[]).filter(Boolean);
+        const accs  = (item.accessories||[]).filter(Boolean);
+        const included = item.included||[];
+        const pct = Math.min(100,Math.round(included.length/6*100));
+        const condClass = item.condition==='Mint'?'cond-mint':item.condition==='Good'?'cond-good':'cond-play';
+        const color = item.color||'#D9C6F0';
+        const q = encodeURIComponent(`vintage polly pocket "${item.name}" sold`);
+        const ebayUrl = `https://www.ebay.com/sch/i.html?_nkw=${q}&LH_Sold=1&LH_Complete=1`;
+        return `
+        <div class="card">
+          <div class="card-strip" style="background:${escapeHTML(color)}"></div>
+          ${item.photo ? `<img class="card-photo" src="${escapeHTML(item.photo)}" alt="${escapeHTML(item.name)}" loading="lazy">` : ''}
+          <div class="card-header">
+            <div>
+              <div class="card-title">${escapeHTML(item.name)}</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">${escapeHTML(item.house||'—')} · ${escapeHTML(item.maker||'Bluebird')}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
+              <div class="card-year">${escapeHTML(item.year||'?')}</div>
+              <div class="condition-badge ${condClass}">${escapeHTML(item.condition||'Good')}</div>
+            </div>
+          </div>
+          <div class="card-body">
+            ${dolls.length?`<div class="tags">${dolls.map(d=>`<span class="tag doll">🪆 ${escapeHTML(d)}</span>`).join('')}</div>`:''}
+            ${accs.length?`<div class="tags" style="margin-top:6px;">${accs.map(a=>`<span class="tag acc">🎀 ${escapeHTML(a)}</span>`).join('')}</div>`:''}
+            ${included.length?`<div class="tags" style="margin-top:6px;">${included.map(c=>`<span class="tag have">✓ ${escapeHTML(c)}</span>`).join('')}</div>`:''}
+            <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${escapeHTML(color)};filter:saturate(1.5);"></div></div>
+            <div style="font-size:11px;color:var(--text-muted);">Completeness: ${pct}%</div>
+            <div class="price-row">
+              <div><div class="price-lbl">Est. Value</div><div class="price-val">$${parseFloat(item.value||0).toFixed(2)}</div></div>
+              <div style="text-align:right"><div class="price-lbl">Paid</div><div style="font-family:'Fraunces',serif;font-size:16px;color:var(--text-muted);">$${parseFloat(item.paid||0).toFixed(2)}</div></div>
+              <div style="display:flex;gap:6px;align-items:center;">
+                <a href="${ebayUrl}" target="_blank" rel="noopener" style="font-size:10px;padding:4px 10px;border-radius:20px;background:#E4EDFC;color:#1A55B0;font-weight:600;text-decoration:none;white-space:nowrap;">eBay $</a>
+                <button onclick="deleteSet(${idx})" style="background:none;border:none;font-size:18px;cursor:pointer;color:var(--text-muted);padding:4px;">🗑</button>
+              </div>
+            </div>
+            ${item.notes?`<div style="font-size:12px;color:var(--text-muted);margin-top:8px;padding:8px;background:var(--cream);border-radius:12px;">${escapeHTML(item.notes)}</div>`:''}
+          </div>
+        </div>`;
+      }).join('');
+    }
+    switchSection('collection', null);
+  } else if (type === 'wishlist') {
+    bottomNav(1, 'wishlist');
+  }
+}
+
 // ══ ACTIONS ══
-function openAddSheet() { document.getElementById('addSheet').classList.add('open'); document.body.style.overflow='hidden'; }
+function openAddSheet() {
+  resetSheetSteps();
+  document.getElementById('addSheet').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function openSheet() { openAddSheet(); }
 function openWishlistSheet() { document.getElementById('wishSheet').classList.add('open'); document.body.style.overflow='hidden'; }
 function closeSheet(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow=''; }
 function closeAddSheet(e) { if(e.target.classList.contains('sheet-overlay')){ e.currentTarget.classList.remove('open'); document.body.style.overflow=''; } }
@@ -935,11 +1124,11 @@ function resetAddForm() {
   document.getElementById('dolls-rows').innerHTML=`<div class="list-input-row"><input class="form-input" placeholder="Doll name (e.g. Polly, Lila…)" type="text"><button onclick="addRow('dolls-rows','Doll name…')">＋</button></div>`;
   document.getElementById('acc-rows').innerHTML=`<div class="list-input-row"><input class="form-input" placeholder="Accessory (e.g. tiny sofa, pool…)" type="text"><button onclick="addRow('acc-rows','Accessory…')">＋</button></div>`;
   document.querySelectorAll('#chips-included .chip-opt').forEach(c=>c.classList.remove('selected'));
-  document.getElementById('ai-query').value='';
-  document.getElementById('ai-result').classList.remove('show');
-  document.getElementById('prefill-badge').style.display='none';
-  currentAIResult=null; selectedColor='#D9C6F0';
+  document.getElementById('ai-query-coll').value='';
+  document.getElementById('ai-result-coll').classList.remove('show');
+  currentAIResult=null; currentCollectionAIResult=null; selectedColor='#D9C6F0';
   clearPhoto();
+  resetSheetSteps();
 }
 
 // ══ PHOTO UPLOAD ══
@@ -1014,7 +1203,6 @@ function setFilter(f,el) {
 function switchSection(id, tabEl) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById('section-'+id).classList.add('active');
-  if (tabEl) { document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active')); tabEl.classList.add('active'); }
   if (id==='collection') renderCollection(activeFilter);
   if (id==='wishlist')   renderWishlist();
   if (id==='prices')     renderPriceGuide();
@@ -1025,7 +1213,6 @@ function bottomNav(idx,section) {
   const pct=(idx/3)*80+10;
   document.getElementById('navPill').style.left=`calc(${pct}% - 14px)`;
   switchSection(section,null);
-  document.querySelectorAll('.nav-tab').forEach((t,i)=>t.classList.toggle('active',i===idx));
 }
 
 // ══ EXPORT ══
