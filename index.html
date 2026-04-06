@@ -188,8 +188,30 @@
   .empty p{font-size:14px;color:var(--text-muted);line-height:1.5;}
 
   /* TOAST */
-  .toast{position:fixed;top:calc(var(--safe-top) + 60px);left:50%;transform:translateX(-50%) translateY(-20px);background:var(--text);color:#fff;padding:10px 20px;border-radius:var(--r-full);font-size:13px;font-weight:500;z-index:500;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;}
+  .toast{position:fixed;top:calc(var(--safe-top) + 60px);left:50%;transform:translateX(-50%) translateY(-20px);background:var(--text);color:#fff;padding:10px 20px;border-radius:var(--r-full);font-size:13px;font-weight:500;z-index:500;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap;max-width:calc(100vw - 40px);text-align:center;}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* ══ ACCESSIBILITY ══ */
+  /* Visible focus rings for keyboard navigation */
+  :focus-visible{outline:3px solid #A07AB0;outline-offset:3px;border-radius:4px;}
+  button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid #A07AB0;outline-offset:3px;border-radius:8px;}
+  /* Minimum touch targets */
+  .nav-item{min-height:44px;min-width:44px;}
+  .filter-btn{min-height:36px;}
+  .stat-chip{min-height:44px;}
+  /* Wishlist star tooltip */
+  .wish-star-btn{position:relative;}
+  .wish-star-btn::after{content:attr(data-tooltip);position:absolute;bottom:calc(100% + 8px);right:0;background:var(--text);color:#fff;font-size:11px;font-weight:500;padding:5px 10px;border-radius:var(--r-full);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;transform:translateY(4px);}
+  .wish-star-btn:hover::after,.wish-star-btn:focus-visible::after{opacity:1;transform:translateY(0);}
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *{animation-duration:.01ms !important;transition-duration:.01ms !important;}
+  }
+  /* High contrast mode support */
+  @media (forced-colors: active) {
+    .btn-primary,.fab,.ai-btn{border:2px solid ButtonText;}
+    .nav-pill{background:Highlight;}
+  }
 
   /* PREFILL INDICATOR */
   .prefill-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:#7A50A0;font-weight:600;background:#EDE0F8;padding:3px 10px;border-radius:var(--r-full);margin-bottom:12px;}
@@ -237,18 +259,18 @@
     </div>
   </div>
 
-  <div class="stats-row">
-    <div class="stat-chip blush" onclick="filterTap('owned')"><div class="num" id="statTotal">0</div><div class="lbl">Owned</div><span class="tap-label">tap to filter ↓</span></div>
-    <div class="stat-chip lilac" onclick="filterTap('value')"><div class="num" id="statValue">$0</div><div class="lbl">Est. Value</div><span class="tap-label">tap to filter ↓</span></div>
-    <div class="stat-chip mint" onclick="filterTap('complete')"><div class="num" id="statComplete">0%</div><div class="lbl">Complete</div><span class="tap-label">tap to filter ↓</span></div>
-    <div class="stat-chip butter" onclick="filterTap('wishlist')"><div class="num" id="statWish">0</div><div class="lbl">Wishlist</div><span class="tap-label">tap to switch ↓</span></div>
+  <div class="stats-row" role="group" aria-label="Collection statistics">
+    <div class="stat-chip blush" onclick="filterTap('owned')" role="button" tabindex="0" aria-label="Owned sets — tap to filter collection" onkeydown="if(event.key==='Enter'||event.key===' ')filterTap('owned')"><div class="num" id="statTotal">0</div><div class="lbl">Owned</div><span class="tap-label" aria-hidden="true">tap to filter ↓</span></div>
+    <div class="stat-chip lilac" onclick="filterTap('value')" role="button" tabindex="0" aria-label="Estimated value — tap to sort by value" onkeydown="if(event.key==='Enter'||event.key===' ')filterTap('value')"><div class="num" id="statValue">$0</div><div class="lbl">Est. Value</div><span class="tap-label" aria-hidden="true">tap to sort ↓</span></div>
+    <div class="stat-chip mint" onclick="filterTap('complete')" role="button" tabindex="0" aria-label="Completion rate — tap to filter complete sets" onkeydown="if(event.key==='Enter'||event.key===' ')filterTap('complete')"><div class="num" id="statComplete">0%</div><div class="lbl">Complete</div><span class="tap-label" aria-hidden="true">tap to filter ↓</span></div>
+    <div class="stat-chip butter" onclick="filterTap('wishlist')" role="button" tabindex="0" aria-label="Wishlist count — tap to view wishlist" onkeydown="if(event.key==='Enter'||event.key===' ')filterTap('wishlist')"><div class="num" id="statWish">0</div><div class="lbl">Wishlist</div><span class="tap-label" aria-hidden="true">tap to switch ↓</span></div>
   </div>
 
   <!-- COLLECTION -->
   <div class="section active" id="section-collection">
     <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input type="text" placeholder="Search your collection…" oninput="filterCollection(this.value)">
+      <span class="search-icon" aria-hidden="true">🔍</span>
+      <input type="text" placeholder="Search your collection…" oninput="filterCollection(this.value)" aria-label="Search your collection">
     </div>
     <p style="font-size:10px;color:#A07AB0;margin-top:6px;margin-left:4px;">AI lookup — enter a set name to get price data.</p>
 
@@ -282,7 +304,7 @@
         <a class="ebay-link" id="res-ebay-coll" href="#" target="_blank" rel="noopener">🛒 View live eBay sold listings →</a>
         <div style="display:flex;gap:8px;margin-top:4px;">
           <button class="ai-fill-btn" style="flex:1;" onclick="openAddSheetWithAI()">✦ Add to Collection</button>
-          <button onclick="addAIResultToWishlist()" style="width:52px;height:44px;border-radius:var(--r-full);background:linear-gradient(135deg,#F7C5D5,#F4A28C);border:none;font-size:22px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:transform .15s;box-shadow:0 2px 8px rgba(240,100,130,.25);" title="Add to Wishlist" onmousedown="this.style.transform='scale(.9)'" onmouseup="this.style.transform=''" ontouchstart="this.style.transform='scale(.9)'" ontouchend="this.style.transform=''">⭐</button>
+          <button class="wish-star-btn" onclick="addAIResultToWishlist()" aria-label="Add to Wishlist" data-tooltip="Add to Wishlist" style="width:52px;height:44px;border-radius:var(--r-full);background:linear-gradient(135deg,#F7C5D5,#F4A28C);border:none;font-size:22px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:transform .15s;box-shadow:0 2px 8px rgba(240,100,130,.25);" aria-haspopup="false">⭐</button>
         </div>
       </div>
     </div>
@@ -393,15 +415,15 @@
   </div>
 </div>
 
-<button class="fab" id="fab" onclick="openAddSheet()">＋ Add Set</button>
+<button class="fab" id="fab" onclick="openAddSheet()" aria-label="Add a new set to your collection">＋ Add Set</button>
 
-<div class="bottom-nav" id="bottomNav">
-  <div class="nav-pill" id="navPill" style="left:calc(10% - 14px)"></div>
-  <div class="nav-item active" onclick="bottomNav(0,'collection')"><span class="nav-icon">🏠</span><span class="nav-lbl">Collection</span></div>
-  <div class="nav-item" onclick="bottomNav(1,'wishlist')"><span class="nav-icon">⭐</span><span class="nav-lbl">Wishlist</span></div>
-  <div class="nav-item" onclick="bottomNav(2,'prices')"><span class="nav-icon">💰</span><span class="nav-lbl">Prices</span></div>
-  <div class="nav-item" onclick="bottomNav(3,'export')"><span class="nav-icon">🗂️</span><span class="nav-lbl">Sheet View</span></div>
-</div>
+<nav class="bottom-nav" id="bottomNav" aria-label="Main navigation">
+  <div class="nav-pill" id="navPill" style="left:calc(10% - 14px)" aria-hidden="true"></div>
+  <div class="nav-item active" onclick="bottomNav(0,'collection')" role="button" tabindex="0" aria-label="Collection tab" aria-current="page" onkeydown="if(event.key==='Enter'||event.key===' ')bottomNav(0,'collection')"><span class="nav-icon" aria-hidden="true">🏠</span><span class="nav-lbl">Collection</span></div>
+  <div class="nav-item" onclick="bottomNav(1,'wishlist')" role="button" tabindex="0" aria-label="Wishlist tab" onkeydown="if(event.key==='Enter'||event.key===' ')bottomNav(1,'wishlist')"><span class="nav-icon" aria-hidden="true">⭐</span><span class="nav-lbl">Wishlist</span></div>
+  <div class="nav-item" onclick="bottomNav(2,'prices')" role="button" tabindex="0" aria-label="Price guide tab" onkeydown="if(event.key==='Enter'||event.key===' ')bottomNav(2,'prices')"><span class="nav-icon" aria-hidden="true">💰</span><span class="nav-lbl">Prices</span></div>
+  <div class="nav-item" onclick="bottomNav(3,'export')" role="button" tabindex="0" aria-label="Sheet view tab" onkeydown="if(event.key==='Enter'||event.key===' ')bottomNav(3,'export')"><span class="nav-icon" aria-hidden="true">🗂️</span><span class="nav-lbl">Sheet View</span></div>
+</nav>
 
 <!-- ══ ADD SET SHEET ══ -->
 <div class="sheet-overlay" id="addSheet" onclick="closeAddSheet(event)">
@@ -590,7 +612,7 @@
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script>
 // ══ DATA ══
@@ -1270,7 +1292,10 @@ function switchSection(id, tabEl) {
   if (id==='export')     renderDataTables();
 }
 function bottomNav(idx,section) {
-  document.querySelectorAll('.nav-item').forEach((el,i)=>el.classList.toggle('active',i===idx));
+  document.querySelectorAll('.nav-item').forEach((el,i)=>{
+    el.classList.toggle('active',i===idx);
+    el.setAttribute('aria-current', i===idx ? 'page' : 'false');
+  });
   const pct=(idx/3)*80+10;
   document.getElementById('navPill').style.left=`calc(${pct}% - 14px)`;
   switchSection(section,null);
