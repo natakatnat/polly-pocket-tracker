@@ -25,6 +25,12 @@
   .app-subtitle{font-size:12px;color:var(--text-muted);margin-top:1px;}
   .header-badge{background:var(--lilac);border-radius:var(--r-full);padding:6px 14px;font-size:13px;font-weight:600;color:#6B47A0;}
 
+  /* SECONDARY NAV — Features / How it Works */
+  .secondary-nav{display:flex;gap:4px;padding:0 20px 14px;align-items:center;}
+  .secondary-nav-btn{padding:7px 16px;border-radius:var(--r-full);border:1.5px solid var(--outline);background:var(--surface);font-size:13px;font-weight:500;color:var(--text-muted);cursor:pointer;transition:all .18s;white-space:nowrap;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px;}
+  .secondary-nav-btn:hover{background:var(--lilac);border-color:#C0A8E0;color:#5A2A90;}
+  .secondary-nav-btn:active{transform:scale(.96);}
+
   /* STATS */
   .stats-row{display:flex;gap:10px;padding:0 20px 16px;}
   .stat-chip{flex:1;background:var(--surface);border-radius:var(--r-md);padding:14px 10px;text-align:center;box-shadow:0 2px 8px var(--shadow);border:1px solid var(--outline);cursor:pointer;transition:transform .15s;user-select:none;}
@@ -81,7 +87,7 @@
   .nav-item .nav-lbl{font-size:10px;font-weight:500;color:var(--text-muted);margin-top:2px;display:block;transition:color .2s;}
   .nav-item.active .nav-icon{color:#A07AB0;}
   .nav-item.active .nav-lbl{color:#A07AB0;font-weight:600;}
-  .nav-pill{position:absolute;bottom:calc(var(--safe-bottom) + 44px);height:3px;width:28px;background:#A07AB0;border-radius:var(--r-full);transition:left .25s cubic-bezier(.4,0,.2,1);}
+  .nav-item.active{background:rgba(160,122,176,0.10);}
 
   /* SHEET */
   .sheet-overlay{position:fixed;inset:0;background:rgba(58,45,63,.4);z-index:300;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
@@ -102,7 +108,7 @@
   /* Missing pieces */
   .missing-section{margin-top:8px;padding-top:8px;border-top:1px dashed var(--outline);}
   .missing-section-label{font-size:10px;font-weight:700;color:#C0507A;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
-  .tag.missing{background:#FFF0F1;border-color:#F4A0A8;color:#C0303A;text-decoration:line-through;opacity:.85;}
+  .tag.missing{background:#FFF0F1;border-color:#F4A0A8;color:#C0303A;opacity:.85;}
   .ai-input-row{display:flex;gap:8px;align-items:center;}
   .ai-input{flex:1;padding:11px 14px;border-radius:var(--r-full);border:1.5px solid #D9C6F0;background:#fff;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;}
   .ai-input:focus{border-color:#A07AB0;}
@@ -163,6 +169,11 @@
   .sheet-back-link:hover{color:var(--text);}
   .sheet-next-btn{width:100%;padding:16px;border-radius:var(--r-full);background:linear-gradient(135deg,#C07AB0,#8060A0);color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;border:none;cursor:pointer;margin-top:8px;box-shadow:0 4px 16px rgba(160,122,176,.35);transition:all .15s;}
   .sheet-next-btn:active{transform:scale(.97);}
+
+  /* CARD EDIT ICON BUTTON — M3 Expressive top-right */
+  .card-edit-icon-btn{width:32px;height:32px;border-radius:50%;border:none;background:var(--cream);color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s cubic-bezier(.4,0,.2,1);flex-shrink:0;box-shadow:0 1px 4px var(--shadow);}
+  .card-edit-icon-btn:hover{background:#EDE0F8;color:#7A50A0;transform:scale(1.08);}
+  .card-edit-icon-btn:active{transform:scale(.9);}
 
   /* WISHLIST */
   .wishlist-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface);border-radius:var(--r-md);border:1px solid var(--outline);margin-bottom:10px;box-shadow:0 1px 6px var(--shadow);}
@@ -302,6 +313,18 @@
       <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" aria-label="Toggle dark mode"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></button>
       <div class="header-badge" id="collectionCount">0 sets</div>
     </div>
+  </div>
+
+  <!-- SECONDARY NAV -->
+  <div class="secondary-nav">
+    <button class="secondary-nav-btn" onclick="openFeaturesSheet()" aria-label="View features">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Features
+    </button>
+    <button class="secondary-nav-btn" onclick="openHowItWorksSheet()" aria-label="How it works">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      How it Works
+    </button>
   </div>
 
   <div class="stats-row" role="group" aria-label="Collection statistics">
@@ -499,7 +522,6 @@
 </button>
 
 <nav class="bottom-nav" id="bottomNav" aria-label="Main navigation">
-  <div class="nav-pill" id="navPill" style="left:calc(10% - 14px)" aria-hidden="true"></div>
   <div class="nav-item active" onclick="bottomNav(0,'collection')" role="button" tabindex="0" aria-label="Collection tab" aria-current="page" onkeydown="if(event.key==='Enter'||event.key===' ')bottomNav(0,'collection')">
     <span class="nav-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>
     <span class="nav-lbl">Collection</span>
@@ -522,8 +544,8 @@
 <div class="sheet-overlay" id="addSheet" onclick="closeAddSheet(event)">
   <div class="sheet">
     <div class="sheet-handle"></div>
-    <div class="sheet-title">Add a Set</div>
-    <div class="sheet-subtitle">Type a name below and let AI fill in the details</div>
+    <div class="sheet-title" id="addSheet-title">Add a Set</div>
+    <div class="sheet-subtitle" id="addSheet-subtitle">Type a name below and let AI fill in the details</div>
 
     <!-- TWO-STEP PROGRESS BAR -->
     <div class="sheet-progress" style="display:flex;gap:6px;margin-bottom:18px;">
@@ -659,7 +681,7 @@
         </div>
         <button type="button" id="photo-clear-btn" onclick="clearPhoto()" style="display:none;width:100%;padding:10px;border-radius:var(--r-full);border:1.5px solid var(--outline);background:var(--cream);font-size:13px;color:#8B2050;cursor:pointer;margin-top:8px;font-family:'DM Sans',sans-serif;">Remove photo</button>
       </div>
-      <button class="btn-primary" onclick="saveSet()">Save to Collection</button>
+      <button class="btn-primary" id="addSheet-save-btn" onclick="saveSet()">Save to Collection</button>
       <button class="btn-secondary" onclick="closeSheet('addSheet')">Cancel</button>
     </div>
   </div>
@@ -728,6 +750,144 @@
   </div>
 </div>
 
+<!-- ══ FEATURES SHEET ══ -->
+<div class="sheet-overlay" id="featuresSheet" onclick="if(event.target.classList.contains('sheet-overlay'))closeSheet('featuresSheet')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" style="margin-bottom:4px;">What's inside ✦</div>
+    <div class="sheet-subtitle">Everything Pocket Tracker can do for your collection</div>
+
+    <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px;">
+
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:12px;background:var(--cream);border-radius:var(--r-md);">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:#D9C6F0;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7A50A0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:600;font-size:14px;margin-bottom:3px;">AI Set Lookup</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Type any set name and instantly get year, maker, dolls, accessories, and collector pricing from Play Worn to Mint/MIB.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:12px;background:var(--cream);border-radius:var(--r-md);">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:#F7C5D5;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B2050" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:600;font-size:14px;margin-bottom:3px;">Photo Identification</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Point your camera at any Polly Pocket compact and AI identifies the set name, year, and details — even from box art or listing photos.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:12px;background:var(--cream);border-radius:var(--r-md);">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:#B8E8DC;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A6B5A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:600;font-size:14px;margin-bottom:3px;">Complete Piece Tracking</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Log every doll and accessory you own. Hit − on anything not in your set and it moves to "Missing" — no strikethrough, just a clear red indicator.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:12px;background:var(--cream);border-radius:var(--r-md);">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:#FAE8A4;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B07A10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:600;font-size:14px;margin-bottom:3px;">Price Intelligence</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Track estimated value and what you paid. One tap opens live eBay sold listings filtered to that exact set so you always know current market prices.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:12px;background:var(--cream);border-radius:var(--r-md);">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:#F7C5D5;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B2050" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:600;font-size:14px;margin-bottom:3px;">Wishlist with Priorities</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Track grails and wishlist sets with Must Have / Want It / Nice to Have priority tiers. When you find one, "Got it!" AI-fills your collection form instantly.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:12px;background:var(--cream);border-radius:var(--r-md);">
+        <div style="width:40px;height:40px;border-radius:var(--r-md);background:#BDDFF5;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A5A80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:600;font-size:14px;margin-bottom:3px;">Collection Sheet + Export</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">View all your data in a table. Export or share as formatted text, or download a JSON backup you can restore anytime — your data never leaves your device.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="btn-primary" style="margin-top:20px;" onclick="closeSheet('featuresSheet')">Got it!</button>
+  </div>
+</div>
+
+<!-- ══ HOW IT WORKS SHEET ══ -->
+<div class="sheet-overlay" id="howItWorksSheet" onclick="if(event.target.classList.contains('sheet-overlay'))closeSheet('howItWorksSheet')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title" style="margin-bottom:4px;">How it Works</div>
+    <div class="sheet-subtitle">From zero to a full catalogued collection in minutes</div>
+
+    <div style="display:flex;flex-direction:column;gap:0;margin-top:8px;">
+
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--outline);">
+        <div style="width:32px;height:32px;border-radius:50%;background:#A07AB0;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:15px;font-weight:600;flex-shrink:0;">1</div>
+        <div>
+          <div style="font-weight:600;font-size:14px;margin-bottom:3px;">Search or snap a set</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Type a set name in "Find any Polly Pocket set" or tap the camera icon to identify a set from a photo. AI returns the name, year, dolls, accessories, and prices.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--outline);">
+        <div style="width:32px;height:32px;border-radius:50%;background:#A07AB0;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:15px;font-weight:600;flex-shrink:0;">2</div>
+        <div>
+          <div style="font-weight:600;font-size:14px;margin-bottom:3px;">Add it to your collection</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Tap "+ Add to Collection" — the form opens pre-filled with everything AI found. Review and tweak anything, then move to Step 2 for the detail form.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--outline);">
+        <div style="width:32px;height:32px;border-radius:50%;background:#A07AB0;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:15px;font-weight:600;flex-shrink:0;">3</div>
+        <div>
+          <div style="font-weight:600;font-size:14px;margin-bottom:3px;">Mark what's missing</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">In the dolls and accessories lists, tap − on anything you <em>don't</em> have. It moves to the "Missing from set" section so you know exactly what to hunt for.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--outline);">
+        <div style="width:32px;height:32px;border-radius:50%;background:#A07AB0;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:15px;font-weight:600;flex-shrink:0;">4</div>
+        <div>
+          <div style="font-weight:600;font-size:14px;margin-bottom:3px;">Check what's included</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Tap the chips for House/Compact, Box/Insert, Sticker Sheet, etc. to mark what came with your set. This drives the completeness % bar on your card.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--outline);">
+        <div style="width:32px;height:32px;border-radius:50%;background:#A07AB0;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:15px;font-weight:600;flex-shrink:0;">5</div>
+        <div>
+          <div style="font-weight:600;font-size:14px;margin-bottom:3px;">Edit any time</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Found a missing doll? Tap the ✏️ pencil icon in the top-right of any card to re-open the full edit form and update anything — dolls, accessories, value, condition.</div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:14px 0;">
+        <div style="width:32px;height:32px;border-radius:50%;background:#A07AB0;color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:15px;font-weight:600;flex-shrink:0;">6</div>
+        <div>
+          <div style="font-weight:600;font-size:14px;margin-bottom:3px;">Build your wishlist</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Add sets you're hunting to the Wishlist tab. When you finally find one, tap "Got it! — AI fill details" and it automatically moves it to your collection with the form pre-filled.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="btn-primary" style="margin-top:16px;" onclick="closeSheet('howItWorksSheet')">Let's go! ✦</button>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <script>
@@ -740,6 +900,7 @@ let currentAIResult = null;
 let currentWAIResult = null;
 let currentPhotoData = null;
 let currentCollectionAIResult = null;
+let currentEditIdx = null;
 
 const priceGuide = [
   {name:"Polly's Town House",year:1989,maker:"Bluebird",low:45,high:120,color:"#F7C5D5"},
@@ -1144,7 +1305,10 @@ function renderCollection(filter='', textFilter='') {
           <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">${escapeHTML(item.house||'—')} · ${escapeHTML(item.maker||'Bluebird')}</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
-          <div class="card-year">${escapeHTML(item.year||'?')}</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <button class="card-edit-icon-btn" onclick="openEditSheet(${idx})" aria-label="Edit set" title="Edit set"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+            <div class="card-year">${escapeHTML(item.year||'?')}</div>
+          </div>
           <div class="condition-badge ${condClass}">${escapeHTML(item.condition||'Good')}</div>
           ${item.rarity&&item.rarity!=='Common'?`<span class="rarity-badge rarity-${escapeHTML(item.rarity)}">${escapeHTML(item.rarity)}</span>`:''}
           ${hasMissing?`<span style="font-size:10px;font-weight:600;color:#C0303A;background:#FFF0F1;border:1px solid #F4A0A8;border-radius:var(--r-full);padding:2px 8px;">Missing pieces</span>`:''}
@@ -1298,7 +1462,6 @@ function filterTap(type) {
     }
     // Update nav indicator + switch section without re-rendering over the custom filter
     document.querySelectorAll('.nav-item').forEach((el,i)=>el.classList.toggle('active',i===0));
-    document.getElementById('navPill').style.left='calc(10% - 14px)';
     document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
     document.getElementById('section-collection').classList.add('active');
   } else if (type === 'wishlist') {
@@ -1307,6 +1470,8 @@ function filterTap(type) {
 }
 
 // ══ ACTIONS ══
+function openFeaturesSheet() { document.getElementById('featuresSheet').classList.add('open'); document.body.style.overflow='hidden'; }
+function openHowItWorksSheet() { document.getElementById('howItWorksSheet').classList.add('open'); document.body.style.overflow='hidden'; }
 function openAddSheet() {
   resetSheetSteps();
   document.getElementById('addSheet').classList.add('open');
@@ -1374,7 +1539,7 @@ function saveSet() {
   const name = document.getElementById('f-name').value.trim();
   if (!name) { showToast('Please enter a set name'); return; }
   const included = Array.from(document.querySelectorAll('#chips-included .chip-opt.selected')).map(c=>c.textContent);
-  collection.push({
+  const setData = {
     name, year: parseInt(document.getElementById('f-year').value)||'',
     house: document.getElementById('f-house').value.trim(),
     rarity: document.getElementById('f-rarity').value||'Common',
@@ -1389,11 +1554,20 @@ function saveSet() {
     included, color: selectedColor,
     notes: document.getElementById('f-notes').value.trim(),
     photo: currentPhotoData || '',
-    added: new Date().toISOString()
-  });
-  save(); closeSheet('addSheet'); resetAddForm();
-  switchSection('collection',null); renderCollection(activeFilter);
-  showToast('Set added!');
+  };
+  if (currentEditIdx !== null) {
+    setData.added = collection[currentEditIdx].added || new Date().toISOString();
+    collection[currentEditIdx] = setData;
+    save(); closeSheet('addSheet'); resetAddForm();
+    switchSection('collection',null); renderCollection(activeFilter);
+    showToast('Set updated!');
+  } else {
+    setData.added = new Date().toISOString();
+    collection.push(setData);
+    save(); closeSheet('addSheet'); resetAddForm();
+    switchSection('collection',null); renderCollection(activeFilter);
+    showToast('Set added!');
+  }
 }
 
 function resetAddForm() {
@@ -1410,8 +1584,112 @@ function resetAddForm() {
   document.getElementById('ai-query-coll').value='';
   document.getElementById('ai-result-coll').classList.remove('show');
   currentAIResult=null; currentCollectionAIResult=null; selectedColor='#D9C6F0';
+  currentEditIdx=null;
+  document.getElementById('addSheet-title').textContent='Add a Set';
+  document.getElementById('addSheet-subtitle').textContent='Type a name below and let AI fill in the details';
+  document.getElementById('addSheet-save-btn').textContent='Save to Collection';
   clearPhoto();
   resetSheetSteps();
+}
+
+// ══ EDIT EXISTING SET ══
+function openEditSheet(idx) {
+  const item = collection[idx];
+  if (!item) return;
+  currentEditIdx = idx;
+  resetAddForm();  // clears form first (also resets currentEditIdx, so re-set it)
+  currentEditIdx = idx;
+
+  // Update sheet chrome
+  document.getElementById('addSheet-title').textContent = 'Edit Set';
+  document.getElementById('addSheet-subtitle').textContent = 'Update your set details';
+  document.getElementById('addSheet-save-btn').textContent = 'Save Changes';
+
+  // Open sheet
+  document.getElementById('addSheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Step 1 fields
+  document.getElementById('f-name').value = item.name || '';
+  document.getElementById('f-year').value = item.year || '';
+  document.getElementById('f-house').value = item.house || '';
+  document.getElementById('f-rarity').value = item.rarity || 'Common';
+  document.getElementById('f-maker').value = item.maker || 'Bluebird';
+  document.getElementById('f-condition').value = item.condition || 'Good';
+  document.getElementById('f-notes').value = item.notes || '';
+
+  // Step 2 fields
+  document.getElementById('f-paid').value = item.paid || '';
+  document.getElementById('f-value').value = item.value || '';
+
+  // Included chips
+  const included = item.included || [];
+  document.querySelectorAll('#chips-included .chip-opt').forEach(c => {
+    c.classList.toggle('selected', included.includes(c.textContent.trim()));
+  });
+
+  // Color
+  selectedColor = item.color || '#D9C6F0';
+  document.querySelectorAll('#color-chips .chip-opt').forEach(c => {
+    const m = c.getAttribute('onclick').match(/'([^']+)'/);
+    c.classList.toggle('selected', m && m[1] === selectedColor);
+  });
+
+  // Dolls
+  const dollsContainer = document.getElementById('dolls-rows');
+  const dollItems = (item.dolls || []).filter(Boolean);
+  if (dollItems.length) {
+    dollsContainer.innerHTML = dollItems.map(d => `
+      <div class="list-input-row">
+        <input class="form-input" value="${escapeHTML(d)}" type="text">
+        <button onclick="markAsMissing(this)" title="Mark as missing">−</button>
+      </div>`).join('') + `<div class="list-input-row"><input class="form-input" placeholder="Add another doll…" type="text"><button onclick="markAsMissing(this)" title="Mark as missing">−</button></div>`;
+  }
+
+  // Accessories
+  const accContainer = document.getElementById('acc-rows');
+  const accItems = (item.accessories || []).filter(Boolean);
+  if (accItems.length) {
+    accContainer.innerHTML = accItems.map(a => `
+      <div class="list-input-row">
+        <input class="form-input" value="${escapeHTML(a)}" type="text">
+        <button onclick="markAsMissing(this)" title="Mark as missing">−</button>
+      </div>`).join('') + `<div class="list-input-row"><input class="form-input" placeholder="Add another…" type="text"><button onclick="markAsMissing(this)" title="Mark as missing">−</button></div>`;
+  }
+
+  // Missing dolls
+  const missingDolls = (item.missingDolls || []).filter(Boolean);
+  if (missingDolls.length) {
+    document.getElementById('missing-dolls-rows').innerHTML = missingDolls.map(d => `
+      <div class="list-input-row">
+        <input class="form-input" value="${escapeHTML(d)}" type="text" style="color:var(--text-muted);">
+        <button onclick="restoreFromMissing(this)" title="Restore to have" style="background:#B8E8DC;color:#1A6B5A;font-size:16px;">+</button>
+        <button onclick="this.parentElement.remove();checkMissingGroup('missing-dolls-group')" title="Remove entirely" style="background:#F7C5D5;color:#8B2050;font-size:16px;">×</button>
+      </div>`).join('');
+    document.getElementById('missing-dolls-group').style.display = 'block';
+  }
+
+  // Missing accessories
+  const missingAccs = (item.missingAccessories || []).filter(Boolean);
+  if (missingAccs.length) {
+    document.getElementById('missing-acc-rows').innerHTML = missingAccs.map(a => `
+      <div class="list-input-row">
+        <input class="form-input" value="${escapeHTML(a)}" type="text" style="color:var(--text-muted);">
+        <button onclick="restoreFromMissing(this)" title="Restore to have" style="background:#B8E8DC;color:#1A6B5A;font-size:16px;">+</button>
+        <button onclick="this.parentElement.remove();checkMissingGroup('missing-acc-group')" title="Remove entirely" style="background:#F7C5D5;color:#8B2050;font-size:16px;">×</button>
+      </div>`).join('');
+    document.getElementById('missing-acc-group').style.display = 'block';
+  }
+
+  // Photo
+  if (item.photo) {
+    currentPhotoData = item.photo;
+    const preview = document.getElementById('photo-preview-img');
+    preview.src = item.photo;
+    preview.classList.add('show');
+    document.getElementById('photo-placeholder').style.display = 'none';
+    document.getElementById('photo-clear-btn').style.display = 'block';
+  }
 }
 
 // ══ PHOTO UPLOAD ══
@@ -1609,8 +1887,6 @@ function bottomNav(idx,section) {
     el.classList.toggle('active',i===idx);
     el.setAttribute('aria-current', i===idx ? 'page' : 'false');
   });
-  const pct=(idx/3)*80+10;
-  document.getElementById('navPill').style.left=`calc(${pct}% - 14px)`;
   switchSection(section,null);
 }
 
