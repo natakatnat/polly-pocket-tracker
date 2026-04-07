@@ -196,8 +196,25 @@
   button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid #A07AB0;outline-offset:3px;border-radius:8px;}
   /* Minimum touch targets */
   .nav-item{min-height:44px;min-width:44px;}
-  .filter-btn{min-height:36px;}
+  .filter-btn{min-height:44px;}
   .stat-chip{min-height:44px;}
+  .list-input-row button{width:44px !important;height:44px !important;}
+
+  /* Photo upload loading overlay */
+  .photo-loading-overlay{position:absolute;inset:0;background:rgba(253,246,240,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;z-index:5;border-radius:var(--r-md);}
+  .photo-loading-overlay span{font-size:12px;color:var(--text-muted);font-weight:500;}
+
+  /* Rarity badges */
+  .rarity-badge{display:inline-block;padding:2px 9px;border-radius:var(--r-full);font-size:10px;font-weight:600;letter-spacing:.3px;}
+  .rarity-Common{background:var(--cream);color:var(--text-muted);border:1px solid var(--outline);}
+  .rarity-Uncommon{background:#BDDFF5;color:#1A5A80;border:1px solid #9CCCE8;}
+  .rarity-Rare{background:#D9C6F0;color:#5A2A90;border:1px solid #C0A8E0;}
+  .rarity-Grail{background:#FAE8A4;color:#7A5A10;border:1px solid #E8D070;box-shadow:0 0 6px rgba(250,220,60,.35);}
+
+  /* Danger zone */
+  .btn-danger{width:100%;padding:14px;border-radius:var(--r-full);background:none;color:#C0303A;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;border:1.5px solid #E8A0A5;cursor:pointer;margin-top:8px;transition:all .2s;}
+  .btn-danger:hover{background:#FFF0F1;border-color:#C0303A;}
+  .danger-divider{height:1px;background:var(--outline);margin:24px 0 16px;}
   /* Camera button */
   .camera-btn{width:44px;height:44px;border-radius:var(--r-full);background:var(--surface);border:1.5px solid #D9C6F0;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;color:#7A50A0;}
   .camera-btn:hover{background:#EDE0F8;border-color:#A07AB0;}
@@ -460,6 +477,9 @@
     </div>
     <button class="btn-secondary" onclick="document.getElementById('restoreInput').click()">Restore from Backup</button>
     <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restoreData(this)">
+    <div class="danger-divider"></div>
+    <p style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:4px;">Danger zone — this cannot be undone</p>
+    <button class="btn-danger" onclick="clearAllData()">Wipe All Data</button>
   </div>
 </div>
 
@@ -516,6 +536,15 @@
       <div class="form-group">
         <label class="form-label">House / Compact Shape</label>
         <input class="form-input" id="f-house" placeholder="e.g. Clamshell compact, Treehouse…">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rarity</label>
+        <select class="form-select" id="f-rarity">
+          <option value="Common">Common</option>
+          <option value="Uncommon">Uncommon</option>
+          <option value="Rare">Rare ✨</option>
+          <option value="Grail">Grail 🏆</option>
+        </select>
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -599,6 +628,7 @@
       <div class="form-group">
         <label class="form-label">Photo</label>
         <div class="photo-upload-area" id="photo-upload-area">
+          <div class="photo-loading-overlay" id="photo-loading-overlay" style="display:none;"><div class="spinner"></div><span>Optimizing…</span></div>
           <input type="file" accept="image/*" id="f-photo" onchange="handlePhotoUpload(this)">
           <div class="photo-placeholder" id="photo-placeholder">
             <div style="margin-bottom:6px;">
@@ -1095,6 +1125,7 @@ function renderCollection(filter='', textFilter='') {
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
           <div class="card-year">${escapeHTML(item.year||'?')}</div>
           <div class="condition-badge ${condClass}">${escapeHTML(item.condition||'Good')}</div>
+          ${item.rarity&&item.rarity!=='Common'?`<span class="rarity-badge rarity-${escapeHTML(item.rarity)}">${escapeHTML(item.rarity)}</span>`:''}
         </div>
       </div>
       <div class="card-body">
@@ -1287,6 +1318,7 @@ function saveSet() {
   collection.push({
     name, year: parseInt(document.getElementById('f-year').value)||'',
     house: document.getElementById('f-house').value.trim(),
+    rarity: document.getElementById('f-rarity').value||'Common',
     maker: document.getElementById('f-maker').value,
     condition: document.getElementById('f-condition').value,
     dolls: getRows('dolls-rows'),
@@ -1306,6 +1338,7 @@ function saveSet() {
 function resetAddForm() {
   ['f-name','f-year','f-house','f-paid','f-value','f-notes'].forEach(id=>{ const el=document.getElementById(id); el.value=''; el.classList.remove('prefilled'); });
   document.getElementById('f-condition').value='Good';
+  document.getElementById('f-rarity').value='Common';
   document.getElementById('dolls-rows').innerHTML=`<div class="list-input-row"><input class="form-input" placeholder="Doll name (e.g. Polly, Lila…)" type="text"><button onclick="addRow('dolls-rows','Doll name…')">＋</button></div>`;
   document.getElementById('acc-rows').innerHTML=`<div class="list-input-row"><input class="form-input" placeholder="Accessory (e.g. tiny sofa, pool…)" type="text"><button onclick="addRow('acc-rows','Accessory…')">＋</button></div>`;
   document.querySelectorAll('#chips-included .chip-opt').forEach(c=>c.classList.remove('selected'));
@@ -1320,6 +1353,8 @@ function resetAddForm() {
 function handlePhotoUpload(input) {
   const file = input.files[0];
   if (!file) return;
+  const overlay = document.getElementById('photo-loading-overlay');
+  if (overlay) overlay.style.display = 'flex';
   const reader = new FileReader();
   reader.onload = function(e) {
     const img = new Image();
@@ -1337,6 +1372,7 @@ function handlePhotoUpload(input) {
       preview.classList.add('show');
       document.getElementById('photo-placeholder').style.display = 'none';
       document.getElementById('photo-clear-btn').style.display = 'block';
+      if (overlay) overlay.style.display = 'none';
     };
     img.src = e.target.result;
   };
@@ -1382,8 +1418,10 @@ async function gotItWithAI(idx) {
   if (btn) { btn.disabled=true; btn.classList.add('loading'); }
   try {
     const result = await callClaudeForSetInfo(item.name);
-    // Remove from wishlist before opening sheet
+    // Store for undo before removing
+    lastRemovedWish = { idx, item };
     wishlist.splice(idx,1); save(); renderWishlist();
+    showToastWithUndo('Moved to collection!', 'undoWishMove');
     openAddSheet();
     setTimeout(()=>{
       document.getElementById('f-name').value = result.name || item.name;
@@ -1417,10 +1455,11 @@ async function gotItWithAI(idx) {
     }, 150);
   } catch(e) {
     // Fallback: open sheet with just name/year
+    lastRemovedWish = { idx, item };
     wishlist.splice(idx,1); save(); renderWishlist();
     openAddSheet();
     setTimeout(()=>{ document.getElementById('f-name').value=item.name; document.getElementById('f-year').value=item.year||''; },100);
-    showToast('Moved — fill in details!');
+    showToastWithUndo('Moved — fill in details!', 'undoWishMove');
   }
 }
 
@@ -1543,8 +1582,42 @@ function restoreData(input) {
   const r = new FileReader(); r.onload=e=>{ try{ const d=JSON.parse(e.target.result); if(d.collection){ collection=d.collection; wishlist=d.wishlist||[]; save(); renderCollection(); renderWishlist(); showToast('Restored!'); } }catch{ showToast('Invalid file'); } }; r.readAsText(input.files[0]);
 }
 
+// ══ UNDO WISH MOVE ══
+let lastRemovedWish = null;
+let _undoTimer = null;
+
+function showToastWithUndo(msg, undoFnName) {
+  const t = document.getElementById('toast');
+  t.innerHTML = escapeHTML(msg) + ' <span onclick="'+undoFnName+'()" style="margin-left:10px;text-decoration:underline;cursor:pointer;font-weight:700;">Undo</span>';
+  t.classList.add('show');
+  if (_undoTimer) clearTimeout(_undoTimer);
+  _undoTimer = setTimeout(()=>{ t.classList.remove('show'); lastRemovedWish=null; }, 5000);
+}
+
+function undoWishMove() {
+  if (!lastRemovedWish) return;
+  wishlist.splice(lastRemovedWish.idx, 0, lastRemovedWish.item);
+  save(); renderWishlist();
+  lastRemovedWish = null;
+  if (_undoTimer) clearTimeout(_undoTimer);
+  document.getElementById('toast').classList.remove('show');
+  showToast('Wishlist item restored!');
+}
+
+// ══ WIPE ALL DATA ══
+function clearAllData() {
+  if (!confirm('This will permanently delete your entire collection and wishlist. Are you sure?')) return;
+  if (!confirm('This cannot be undone. Delete everything?')) return;
+  localStorage.removeItem('pp_collection');
+  localStorage.removeItem('pp_wishlist');
+  localStorage.removeItem('pp_usage');
+  localStorage.removeItem('ppDarkMode');
+  location.reload();
+}
+
 function showToast(msg) {
   const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  if (_undoTimer) clearTimeout(_undoTimer);
   setTimeout(()=>t.classList.remove('show'),2800);
 }
 
