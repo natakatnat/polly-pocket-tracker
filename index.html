@@ -355,6 +355,61 @@
   <!-- COLLECTION -->
   <div class="section active" id="section-collection">
 
+    <!-- FIND ANY POLLY POCKET SET — AI + DB LOOKUP -->
+    <div class="ai-lookup-box" id="collection-ai-lookup" style="margin-bottom:14px;">
+      <div style="margin-bottom:10px;">
+        <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:600;color:var(--text);margin-bottom:3px;">Find any Polly Pocket set</div>
+        <div style="font-size:12px;color:var(--text-muted);">Look up · Snap to identify · Add to your collection</div>
+      </div>
+      <div class="ai-input-row">
+        <button class="camera-btn" onclick="triggerCamera()" aria-label="Identify set from photo" title="Identify from photo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        </button>
+        <input type="file" id="camera-file-input" accept="image/*" capture="environment" style="display:none" onchange="handleCameraInput(this)">
+        <input class="ai-input" id="ai-query-coll" placeholder="Set name, doll, accessory, or compact shape…" type="text" onkeydown="if(event.key==='Enter')doAILookupFromCollection()" aria-label="Search for a Polly Pocket set">
+        <button class="ai-btn" id="ai-btn-coll" onclick="doAILookupFromCollection()" aria-label="Look up set">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <span id="ai-btn-text-coll">Look up</span>
+        </button>
+      </div>
+      <p id="ai-rate-limit-coll" style="font-size:11px;color:var(--text-muted);text-align:right;margin-top:5px;"></p>
+      <div class="ai-spinner" id="ai-spinner-coll">
+        <div class="spinner"></div>
+        <span>Looking up vintage details<span class="typing-dots"><span></span><span></span><span></span></span></span>
+      </div>
+      <div class="ai-result" id="ai-result-coll">
+        <div id="coll-res-badge" class="db-badge local" style="margin-bottom:8px;">📚 From local database</div>
+        <div class="ai-result-header">
+          <div>
+            <div class="ai-result-name" id="res-name-coll"></div>
+            <div class="ai-result-year" id="res-year-coll"></div>
+          </div>
+          <div class="ai-confidence" id="res-conf-coll"></div>
+        </div>
+        <div class="ai-price-row">
+          <div class="ai-price-chip"><div class="apc-val" id="res-play-coll"></div><div class="apc-lbl">Play Worn</div></div>
+          <div class="ai-price-chip"><div class="apc-val" id="res-good-coll"></div><div class="apc-lbl">Good</div></div>
+          <div class="ai-price-chip"><div class="apc-val" id="res-mint-coll"></div><div class="apc-lbl">Mint/MIB</div></div>
+        </div>
+        <div class="ai-tags-row" id="res-tags-coll"></div>
+        <div id="coll-res-missing" class="missing-alert" style="display:none;">
+          <div class="missing-alert-label">⚠️ Commonly missing from this set</div>
+          <div id="coll-res-missing-items"></div>
+        </div>
+        <a class="ebay-link" id="res-ebay-coll" href="#" target="_blank" rel="noopener">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/></svg>
+          View live eBay sold listings
+        </a>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button class="ai-fill-btn" style="flex:1;" onclick="openAddSheetWithAI()">+ Add to Collection</button>
+          <button class="wish-star-btn" onclick="addAIResultToWishlist()" aria-label="Save to Wishlist" data-tooltip="Save to Wishlist" style="width:52px;height:44px;border-radius:var(--r-full);background:#F7C5D5;border:1.5px solid #F4A28C;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:transform .15s;" aria-haspopup="false">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B2050" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+          </button>
+        </div>
+        <div id="coll-res-suggestions" class="suggestions-row" style="display:none;"></div>
+      </div>
+    </div>
+
     <!-- MY COLLECTION HEADER + INLINE EXPANDABLE SEARCH -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
       <div style="font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--text);">My Collection</div>
@@ -1013,32 +1068,93 @@ function checkRateLimit() {
 async function doAILookupFromCollection() {
   const query = document.getElementById('ai-query-coll').value.trim();
   if (!query) { showToast('Type a set name first!'); return; }
+
+  // DB-first — no API call, no rate-limit consumption
+  const local = searchLocalDB(query);
+  if (local.length && local[0].score >= 60) {
+    const result = dbEntryToResult(local[0].set);
+    currentCollectionAIResult = result;
+    displayAIResultCollection(result, local.slice(1, 3), local[0].score);
+    return;
+  }
+
+  // Fall through to Claude
   if (!checkRateLimit()) return;
-  setAILoading(true, 'ai-btn-coll','ai-btn-text-coll','ai-spinner-coll','ai-result-coll');
+  setAILoading(true,'ai-btn-coll','ai-btn-text-coll','ai-spinner-coll','ai-result-coll');
   try {
     const result = await callClaudeForSetInfo(query);
-    currentCollectionAIResult = result;
-    displayAIResultCollection(result);
+    const enriched = enrichWithDB(result);
+    currentCollectionAIResult = enriched;
+    const alts = searchLocalDB(query).slice(0, 2);
+    displayAIResultCollection(enriched, alts, 0);
   } catch(e) {
     showToast('Lookup failed — fill in manually');
     console.error(e);
   }
   setAILoading(false,'ai-btn-coll','ai-btn-text-coll','ai-spinner-coll','ai-result-coll');
 }
-function displayAIResultCollection(r) {
+function displayAIResultCollection(r, alternatives, topScore) {
+  // Source badge
+  const badge = document.getElementById('coll-res-badge');
+  if (r.fromDB) { badge.textContent='📚 From local database'; badge.className='db-badge local'; }
+  else if (r.enrichedFromDB) { badge.textContent='✦ AI lookup · enriched from database'; badge.className='db-badge ai-badge'; }
+  else { badge.textContent='✦ Via AI lookup'; badge.className='db-badge ai-badge'; }
+
   document.getElementById('res-name-coll').textContent = r.name || '—';
   document.getElementById('res-year-coll').textContent = `${r.year||'?'} · ${r.maker||'Bluebird'}`;
-  document.getElementById('res-play-coll').textContent = `$${r.play_price||'?'}`;
-  document.getElementById('res-good-coll').textContent = `$${r.good_price||'?'}`;
-  document.getElementById('res-mint-coll').textContent = `$${r.mint_price||'?'}`;
+  document.getElementById('res-play-coll').textContent = `$${r.play_price??'?'}`;
+  document.getElementById('res-good-coll').textContent = `$${r.good_price??'?'}`;
+  document.getElementById('res-mint-coll').textContent = `$${r.mint_price??'?'}`;
+
   const conf = document.getElementById('res-conf-coll');
-  conf.textContent = r.confidence === 'high' ? '✓ High confidence' : r.confidence === 'medium' ? '~ Medium' : '? Low confidence';
+  conf.textContent = r.confidence==='high'?'✓ High confidence':r.confidence==='medium'?'~ Medium':'? Low confidence';
   conf.className = 'ai-confidence conf-'+(r.confidence||'med').replace('medium','med');
+
   const tags = document.getElementById('res-tags-coll');
-  const items = [...(r.dolls||[]).map(d=>`<span class="ai-tag tag doll" style="display:inline-flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5 21v-1a7 7 0 0114 0v1"/></svg> ${d}</span>`), ...(r.accessories||[]).slice(0,6).map(a=>`<span class="ai-tag tag acc" style="display:inline-flex;align-items:center;gap:4px;"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg> ${a}</span>`)];
-  tags.innerHTML = items.join('');
+  const personSVG = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5 21v-1a7 7 0 0114 0v1"/></svg>`;
+  const accSVG = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>`;
+  tags.innerHTML = [
+    ...(r.dolls||[]).map(d=>`<span class="ai-tag tag doll" style="display:inline-flex;align-items:center;gap:4px;">${personSVG} ${escapeHTML(d)}</span>`),
+    ...(r.accessories||[]).slice(0,6).map(a=>`<span class="ai-tag tag acc" style="display:inline-flex;align-items:center;gap:4px;">${accSVG} ${escapeHTML(a)}</span>`)
+  ].join('');
+
+  // Commonly missing
+  const missingDiv = document.getElementById('coll-res-missing');
+  const missing = r.commonlyMissing || [];
+  if (missing.length) {
+    document.getElementById('coll-res-missing-items').innerHTML =
+      missing.map(m=>`<span class="missing-tag">✗ ${escapeHTML(m)}</span>`).join('');
+    missingDiv.style.display = 'block';
+  } else {
+    missingDiv.style.display = 'none';
+  }
+
   document.getElementById('res-ebay-coll').href = buildEbayUrl(r.name);
+
+  // Did you mean? / Related sets pills
+  const sugDiv = document.getElementById('coll-res-suggestions');
+  if (alternatives && alternatives.length) {
+    const label = (topScore >= 80) ? 'Related sets →' : 'Did you mean?';
+    sugDiv.innerHTML = `<span class="suggestions-label">${label}</span>` +
+      alternatives.map(({set}) =>
+        `<button class="suggestion-pill" onclick="loadCollSuggestion('${escapeHTML(set.id)}')">${escapeHTML(set.name)} <span style="opacity:.6;font-size:10px;">'${String(set.year).slice(2)}</span></button>`
+      ).join('');
+    sugDiv.style.display = 'flex';
+  } else {
+    sugDiv.style.display = 'none';
+  }
+
   document.getElementById('ai-result-coll').classList.add('show');
+}
+
+function loadCollSuggestion(id) {
+  const set = POLLY_DB.find(s => s.id === id);
+  if (!set) return;
+  const result = dbEntryToResult(set);
+  currentCollectionAIResult = result;
+  const query = document.getElementById('ai-query-coll').value.trim();
+  const others = searchLocalDB(query).filter(r => r.set.id !== id).slice(0, 2);
+  displayAIResultCollection(result, others, 100);
 }
 function addAIResultToWishlist() {
   if (!currentCollectionAIResult) return;
@@ -1933,10 +2049,11 @@ function handleCameraInput(input) {
     document.getElementById('ai-spinner-coll').querySelector('span').textContent = 'Identifying set from photo…';
     try {
       const result = await callClaudeWithImage(base64, mediaType);
-      currentCollectionAIResult = result;
-      // Fill in the text field with the identified name
-      document.getElementById('ai-query-coll').value = result.name || '';
-      displayAIResultCollection(result);
+      const enriched = enrichWithDB(result);
+      currentCollectionAIResult = enriched;
+      document.getElementById('ai-query-coll').value = enriched.name || '';
+      // Photo = exact — no alternatives
+      displayAIResultCollection(enriched, [], 100);
     } catch(e) {
       showToast('Could not identify set — try a clearer photo');
       console.error(e);
