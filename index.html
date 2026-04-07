@@ -95,8 +95,14 @@
   .sheet-progress div{flex:1;height:4px;border-radius:99px;transition:background .2s;}
 
   /* ══ AI LOOKUP ZONE ══ */
-  .ai-lookup-box{background:linear-gradient(135deg,#EDE0F8,#F7E8F5);border-radius:var(--r-lg);padding:16px;margin-bottom:18px;border:1.5px solid #D9C6F0;}
-  .ai-lookup-label{font-size:11px;font-weight:700;color:#7A50A0;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+  .ai-lookup-box{background:var(--surface);border-radius:var(--r-lg);padding:16px;margin-bottom:18px;border:1px solid var(--outline);box-shadow:0 2px 10px var(--shadow);}
+  .ai-lookup-title{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--text);margin-bottom:6px;}
+  .ai-feature-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+  .ai-feature-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:var(--r-full);background:var(--cream);border:1px solid var(--outline);font-size:11px;font-weight:500;color:var(--text-muted);}
+  /* Missing pieces */
+  .missing-section{margin-top:8px;padding-top:8px;border-top:1px dashed var(--outline);}
+  .missing-section-label{font-size:10px;font-weight:700;color:#C0507A;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+  .tag.missing{background:#FFF0F1;border-color:#F4A0A8;color:#C0303A;text-decoration:line-through;opacity:.85;}
   .ai-input-row{display:flex;gap:8px;align-items:center;}
   .ai-input{flex:1;padding:11px 14px;border-radius:var(--r-full);border:1.5px solid #D9C6F0;background:#fff;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--text);outline:none;transition:border-color .2s;}
   .ai-input:focus{border-color:#A07AB0;}
@@ -277,7 +283,8 @@
   body.dark .search-wrap input{background:var(--surface);color:var(--text);}
   body.dark .photo-upload-area{background:var(--surface);}
   body.dark .photo-upload-area:hover,body.dark .photo-upload-area:focus-within{background:#2D2045;}
-  body.dark .ai-lookup-box{background:linear-gradient(135deg,#2A1E40,#331830);border-color:#4A3068;}
+  body.dark .ai-lookup-box{background:var(--surface);border-color:var(--outline);}
+  body.dark .ai-feature-pill{background:var(--outline);}
   body.dark .ai-input{background:var(--surface);color:var(--text);}
   body.dark .ai-result{background:var(--surface);}
   body.dark .card-year{background:var(--outline);}
@@ -309,9 +316,12 @@
 
     <!-- UNIFIED AI LOOKUP + SEARCH BAR -->
     <div class="ai-lookup-box" id="collection-ai-lookup" style="margin-bottom:14px;">
-      <div class="ai-lookup-label">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#7A50A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Look up any vintage set — get prices &amp; add to collection
+      <div class="ai-lookup-title">Find any Polly Pocket set</div>
+      <div class="ai-feature-pills">
+        <span class="ai-feature-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Photo ID</span>
+        <span class="ai-feature-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Price check</span>
+        <span class="ai-feature-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Add to wishlist</span>
+        <span class="ai-feature-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add to collection</span>
       </div>
       <div class="ai-input-row">
         <button class="camera-btn" onclick="triggerCamera()" aria-label="Identify set from photo" title="Identify from photo">
@@ -581,8 +591,12 @@
         <div id="dolls-rows">
           <div class="list-input-row">
             <input class="form-input" placeholder="Doll name (e.g. Polly, Lila…)" type="text">
-            <button onclick="addRow('dolls-rows','Doll name (e.g. Polly, Lila…)')">＋</button>
+            <button onclick="markAsMissing(this)" title="Mark as missing">−</button>
           </div>
+        </div>
+        <div class="missing-section" id="missing-dolls-group" style="display:none;">
+          <div class="missing-section-label">Missing from set</div>
+          <div id="missing-dolls-rows"></div>
         </div>
       </div>
       <div class="form-group">
@@ -590,8 +604,12 @@
         <div id="acc-rows">
           <div class="list-input-row">
             <input class="form-input" placeholder="Accessory (e.g. tiny sofa, pool…)" type="text">
-            <button onclick="addRow('acc-rows','Accessory (e.g. tiny sofa, pool…)')">＋</button>
+            <button onclick="markAsMissing(this)" title="Mark as missing">−</button>
           </div>
+        </div>
+        <div class="missing-section" id="missing-acc-group" style="display:none;">
+          <div class="missing-section-label">Missing from set</div>
+          <div id="missing-acc-rows"></div>
         </div>
       </div>
       <div class="form-group">
@@ -861,7 +879,7 @@ function openAddSheetWithAI() {
       dollsContainer.innerHTML = r.dolls.map(d=>`
         <div class="list-input-row">
           <input class="form-input prefilled" value="${escapeHTML(d)}" type="text">
-          <button onclick="addRow('dolls-rows','Doll name…')">＋</button>
+          <button onclick="markAsMissing(this)" title="Mark as missing">−</button>
         </div>`).join('') + `<div class="list-input-row"><input class="form-input" placeholder="Add another doll…" type="text"><button onclick="addRow('dolls-rows','Doll…')">＋</button></div>`;
     }
     const accContainer = document.getElementById('acc-rows');
@@ -869,7 +887,7 @@ function openAddSheetWithAI() {
       accContainer.innerHTML = r.accessories.map(a=>`
         <div class="list-input-row">
           <input class="form-input prefilled" value="${escapeHTML(a)}" type="text">
-          <button onclick="addRow('acc-rows','Accessory…')">＋</button>
+          <button onclick="markAsMissing(this)" title="Mark as missing">−</button>
         </div>`).join('') + `<div class="list-input-row"><input class="form-input" placeholder="Add another…" type="text"><button onclick="addRow('acc-rows','Accessory…')">＋</button></div>`;
     }
     ['f-name','f-year','f-house','f-value'].forEach(id=>{
@@ -1105,6 +1123,8 @@ function renderCollection(filter='', textFilter='') {
     const idx = collection.indexOf(item);
     const dolls = (item.dolls||[]).filter(Boolean);
     const accs  = (item.accessories||[]).filter(Boolean);
+    const missingDolls = (item.missingDolls||[]).filter(Boolean);
+    const missingAccs  = (item.missingAccessories||[]).filter(Boolean);
     const included = item.included||[];
     const pct = Math.min(100,Math.round(included.length/6*100));
     const condClass = item.condition==='Mint'?'cond-mint':item.condition==='Good'?'cond-good':'cond-play';
@@ -1113,6 +1133,7 @@ function renderCollection(filter='', textFilter='') {
     const trashIcon = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>`;
     const personIcon = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5 21v-1a7 7 0 0114 0v1"/></svg>`;
     const accIcon = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>`;
+    const hasMissing = missingDolls.length > 0 || missingAccs.length > 0;
     return `
     <div class="card">
       <div class="card-strip" style="background:${escapeHTML(color)}"></div>
@@ -1126,11 +1147,13 @@ function renderCollection(filter='', textFilter='') {
           <div class="card-year">${escapeHTML(item.year||'?')}</div>
           <div class="condition-badge ${condClass}">${escapeHTML(item.condition||'Good')}</div>
           ${item.rarity&&item.rarity!=='Common'?`<span class="rarity-badge rarity-${escapeHTML(item.rarity)}">${escapeHTML(item.rarity)}</span>`:''}
+          ${hasMissing?`<span style="font-size:10px;font-weight:600;color:#C0303A;background:#FFF0F1;border:1px solid #F4A0A8;border-radius:var(--r-full);padding:2px 8px;">Missing pieces</span>`:''}
         </div>
       </div>
       <div class="card-body">
         ${dolls.length?`<div class="tags">${dolls.map(d=>`<span class="tag doll" style="display:inline-flex;align-items:center;gap:4px;">${personIcon} ${escapeHTML(d)}</span>`).join('')}</div>`:''}
         ${accs.length?`<div class="tags" style="margin-top:6px;">${accs.map(a=>`<span class="tag acc" style="display:inline-flex;align-items:center;gap:4px;">${accIcon} ${escapeHTML(a)}</span>`).join('')}</div>`:''}
+        ${(missingDolls.length||missingAccs.length)?`<div class="missing-section"><div class="missing-section-label">Missing from set</div><div class="tags">${[...missingDolls.map(d=>`<span class="tag missing" style="display:inline-flex;align-items:center;gap:4px;">${personIcon} ${escapeHTML(d)}</span>`), ...missingAccs.map(a=>`<span class="tag missing" style="display:inline-flex;align-items:center;gap:4px;">${accIcon} ${escapeHTML(a)}</span>`)].join('')}</div></div>`:''}
         ${included.length?`<div class="tags" style="margin-top:6px;">${included.map(c=>`<span class="tag have">✓ ${escapeHTML(c)}</span>`).join('')}</div>`:''}
         <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${escapeHTML(color)};filter:saturate(1.5);"></div></div>
         <div style="font-size:11px;color:var(--text-muted);">Completeness: ${pct}%</div>
@@ -1297,8 +1320,44 @@ function closeAddSheet(e) { if(e.target.classList.contains('sheet-overlay')){ e.
 function getRows(containerId) { return Array.from(document.querySelectorAll('#'+containerId+' input')).map(i=>i.value.trim()).filter(Boolean); }
 function addRow(containerId, placeholder) {
   const row = document.createElement('div'); row.className='list-input-row';
-  row.innerHTML=`<input class="form-input" placeholder="${placeholder}" type="text"><button onclick="this.parentElement.remove()">−</button>`;
+  const useMissing = (containerId==='dolls-rows'||containerId==='acc-rows');
+  const minusHandler = useMissing ? 'markAsMissing(this)' : 'this.parentElement.remove()';
+  row.innerHTML=`<input class="form-input" placeholder="${placeholder}" type="text"><button onclick="${minusHandler}" title="${useMissing?'Mark as missing':'Remove'}">−</button>`;
   document.getElementById(containerId).appendChild(row);
+}
+
+function markAsMissing(btn) {
+  const row = btn.parentElement;
+  const val = row.querySelector('input').value.trim();
+  if (!val) { row.remove(); return; }
+  const parentId = row.parentElement.id;
+  const missingRowsId = parentId==='dolls-rows' ? 'missing-dolls-rows' : parentId==='acc-rows' ? 'missing-acc-rows' : null;
+  const missingGroupId = parentId==='dolls-rows' ? 'missing-dolls-group' : parentId==='acc-rows' ? 'missing-acc-group' : null;
+  if (!missingRowsId) { row.remove(); return; }
+  const mRow = document.createElement('div'); mRow.className='list-input-row';
+  mRow.innerHTML=`<input class="form-input" value="${val.replace(/"/g,'&quot;')}" type="text" style="color:var(--text-muted);text-decoration:line-through;"><button onclick="restoreFromMissing(this)" title="Restore to have" style="background:#B8E8DC;color:#1A6B5A;font-size:16px;">+</button><button onclick="this.parentElement.remove();checkMissingGroup('${missingGroupId}')" title="Remove entirely" style="background:#F7C5D5;color:#8B2050;font-size:16px;">×</button>`;
+  document.getElementById(missingRowsId).appendChild(mRow);
+  document.getElementById(missingGroupId).style.display = 'block';
+  row.remove();
+}
+
+function restoreFromMissing(btn) {
+  const row = btn.parentElement;
+  const val = row.querySelector('input').value.trim();
+  const missingRowsId = row.parentElement.id;
+  const targetId = missingRowsId==='missing-dolls-rows' ? 'dolls-rows' : 'acc-rows';
+  const missingGroupId = missingRowsId==='missing-dolls-rows' ? 'missing-dolls-group' : 'missing-acc-group';
+  if (val) addRow(targetId, ''); // add blank row first, then set value below
+  const addedRow = document.querySelector('#'+targetId+' .list-input-row:last-child input');
+  if (addedRow) addedRow.value = val;
+  row.remove();
+  checkMissingGroup(missingGroupId);
+}
+
+function checkMissingGroup(groupId) {
+  const group = document.getElementById(groupId);
+  const rowsId = groupId==='missing-dolls-group' ? 'missing-dolls-rows' : 'missing-acc-rows';
+  if (!document.getElementById(rowsId).children.length) group.style.display='none';
 }
 function toggleChip(el) { el.classList.toggle('selected'); }
 function selectColor(el, color) {
@@ -1323,6 +1382,8 @@ function saveSet() {
     condition: document.getElementById('f-condition').value,
     dolls: getRows('dolls-rows'),
     accessories: getRows('acc-rows'),
+    missingDolls: getRows('missing-dolls-rows'),
+    missingAccessories: getRows('missing-acc-rows'),
     paid: parseFloat(document.getElementById('f-paid').value)||0,
     value: parseFloat(document.getElementById('f-value').value)||0,
     included, color: selectedColor,
@@ -1339,8 +1400,12 @@ function resetAddForm() {
   ['f-name','f-year','f-house','f-paid','f-value','f-notes'].forEach(id=>{ const el=document.getElementById(id); el.value=''; el.classList.remove('prefilled'); });
   document.getElementById('f-condition').value='Good';
   document.getElementById('f-rarity').value='Common';
-  document.getElementById('dolls-rows').innerHTML=`<div class="list-input-row"><input class="form-input" placeholder="Doll name (e.g. Polly, Lila…)" type="text"><button onclick="addRow('dolls-rows','Doll name…')">＋</button></div>`;
-  document.getElementById('acc-rows').innerHTML=`<div class="list-input-row"><input class="form-input" placeholder="Accessory (e.g. tiny sofa, pool…)" type="text"><button onclick="addRow('acc-rows','Accessory…')">＋</button></div>`;
+  document.getElementById('dolls-rows').innerHTML=`<div class="list-input-row"><input class="form-input" placeholder="Doll name (e.g. Polly, Lila…)" type="text"><button onclick="markAsMissing(this)" title="Mark as missing">−</button></div>`;
+  document.getElementById('acc-rows').innerHTML=`<div class="list-input-row"><input class="form-input" placeholder="Accessory (e.g. tiny sofa, pool…)" type="text"><button onclick="markAsMissing(this)" title="Mark as missing">−</button></div>`;
+  document.getElementById('missing-dolls-rows').innerHTML='';
+  document.getElementById('missing-acc-rows').innerHTML='';
+  document.getElementById('missing-dolls-group').style.display='none';
+  document.getElementById('missing-acc-group').style.display='none';
   document.querySelectorAll('#chips-included .chip-opt').forEach(c=>c.classList.remove('selected'));
   document.getElementById('ai-query-coll').value='';
   document.getElementById('ai-result-coll').classList.remove('show');
@@ -1430,13 +1495,13 @@ async function gotItWithAI(idx) {
       if (result.maker) document.getElementById('f-maker').value = result.maker;
       document.getElementById('f-value').value = result.good_price || item.price || '';
       if (result.notes) document.getElementById('f-notes').value = result.notes;
-      // Pre-fill dolls — all checked (user deselects what they don't have)
+      // Pre-fill dolls — hit − to mark as missing instead of deleting
       const dollsContainer = document.getElementById('dolls-rows');
       if (result.dolls && result.dolls.length) {
         dollsContainer.innerHTML = result.dolls.map(d=>`
           <div class="list-input-row">
             <input class="form-input prefilled" value="${escapeHTML(d)}" type="text">
-            <button onclick="this.parentElement.remove()">−</button>
+            <button onclick="markAsMissing(this)" title="Mark as missing">−</button>
           </div>`).join('') + `<div class="list-input-row"><input class="form-input" placeholder="Add another doll…" type="text"><button onclick="addRow('dolls-rows','Doll…')">＋</button></div>`;
       }
       // Pre-fill accessories
@@ -1445,7 +1510,7 @@ async function gotItWithAI(idx) {
         accContainer.innerHTML = result.accessories.map(a=>`
           <div class="list-input-row">
             <input class="form-input prefilled" value="${escapeHTML(a)}" type="text">
-            <button onclick="this.parentElement.remove()">−</button>
+            <button onclick="markAsMissing(this)" title="Mark as missing">−</button>
           </div>`).join('') + `<div class="list-input-row"><input class="form-input" placeholder="Add another…" type="text"><button onclick="addRow('acc-rows','Accessory…')">＋</button></div>`;
       }
       ['f-name','f-year','f-house','f-value'].forEach(id=>{
