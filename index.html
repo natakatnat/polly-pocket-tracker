@@ -440,11 +440,40 @@
       <div class="filter-btn" onclick="setFilter('bluebird',this)">Bluebird</div>
     </div>
     <div id="collection-list"></div>
-    <div class="empty" id="collection-empty" style="display:none;">
-      <div class="ico"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#A07AB0" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
-      <h3>No sets yet!</h3>
-      <p>Search any set name above to get prices and add it to your collection.</p>
-      <button class="btn-primary" style="margin-top:20px;width:auto;padding:14px 28px;" onclick="openSheet()">Add your first set</button>
+    <div id="collection-empty" style="display:none;text-align:center;padding:32px 20px 40px;">
+      <!-- Illustration -->
+      <div style="position:relative;display:inline-block;margin-bottom:24px;">
+        <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#F7C5D5,#D9C6F0);display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:0 8px 32px rgba(160,122,176,.25);">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#A07AB0" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <!-- floating sparkles -->
+        <span style="position:absolute;top:-4px;right:-4px;font-size:20px;">✦</span>
+        <span style="position:absolute;bottom:0px;left:-8px;font-size:14px;opacity:.6;">✦</span>
+      </div>
+      <div style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--text);margin-bottom:10px;line-height:1.2;">Your collection<br>starts here</div>
+      <p style="font-size:14px;color:var(--text-muted);line-height:1.6;max-width:260px;margin:0 auto 24px;">Look up any vintage Polly Pocket set above — get instant prices, dolls, accessories, and add it in seconds.</p>
+      <!-- Step hints -->
+      <div style="display:flex;flex-direction:column;gap:10px;text-align:left;background:var(--surface);border-radius:var(--r-lg);border:1px solid var(--outline);padding:16px;margin-bottom:24px;box-shadow:0 2px 8px var(--shadow);">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:#D9C6F0;color:#7A50A0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">1</div>
+          <div style="font-size:13px;color:var(--text);">Type a set name or snap a photo above</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:#B8E8DC;color:#1A6B5A;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">2</div>
+          <div style="font-size:13px;color:var(--text);">Tap "+ Add to Collection" on the result</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:#FAE8A4;color:#B07A10;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">3</div>
+          <div style="font-size:13px;color:var(--text);">Mark dolls &amp; accessories — done!</div>
+        </div>
+      </div>
+      <button class="btn-primary" style="width:auto;padding:14px 32px;" onclick="openSheet()">
+        <span style="display:flex;align-items:center;gap:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add your first set
+        </span>
+      </button>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:12px;">or use the lookup above to search first</div>
     </div>
   </div>
 
@@ -964,6 +993,128 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 
+<!-- ══ CARD DETAIL SHEET ══ -->
+<div class="sheet-overlay" id="detailSheet" onclick="if(event.target.classList.contains('sheet-overlay'))closeSheet('detailSheet')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px;">
+      <div style="flex:1;min-width:0;">
+        <div id="ds-strip" style="height:4px;border-radius:var(--r-full);width:48px;margin-bottom:10px;"></div>
+        <div class="sheet-title" id="ds-name" style="margin-bottom:4px;"></div>
+        <div id="ds-meta" style="font-size:13px;color:var(--text-muted);margin-bottom:10px;"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;margin-left:12px;">
+        <div id="ds-year" class="card-year"></div>
+        <div id="ds-condition" class="condition-badge"></div>
+        <div id="ds-rarity"></div>
+      </div>
+    </div>
+
+    <img id="ds-photo" style="width:100%;max-height:200px;object-fit:cover;border-radius:var(--r-md);margin-bottom:14px;display:none;" alt="Set photo">
+
+    <!-- Prices -->
+    <div style="display:flex;gap:8px;margin-bottom:14px;">
+      <div class="ai-price-chip" style="flex:1;"><div class="apc-val" id="ds-value" style="color:#A07AB0;"></div><div class="apc-lbl">Est. Value</div></div>
+      <div class="ai-price-chip" style="flex:1;"><div class="apc-val" id="ds-paid" style="color:var(--text-muted);"></div><div class="apc-lbl">Paid</div></div>
+    </div>
+
+    <!-- Progress -->
+    <div style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);margin-bottom:5px;"><span>Completeness</span><span id="ds-pct"></span></div>
+      <div class="progress-bar"><div id="ds-progress" class="progress-fill" style="width:0%;"></div></div>
+    </div>
+
+    <!-- Dolls -->
+    <div id="ds-dolls-section" style="margin-bottom:12px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:7px;">Dolls</div>
+      <div id="ds-dolls" class="tags"></div>
+    </div>
+
+    <!-- Accessories -->
+    <div id="ds-acc-section" style="margin-bottom:12px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:7px;">Accessories</div>
+      <div id="ds-acc" class="tags"></div>
+    </div>
+
+    <!-- Missing -->
+    <div id="ds-missing-section" style="display:none;margin-bottom:12px;padding:10px 12px;background:#FFF0F1;border-radius:var(--r-md);border:1px solid #F4A0A8;">
+      <div style="font-size:10px;font-weight:700;color:#C0303A;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;">Missing from set</div>
+      <div id="ds-missing" class="tags"></div>
+    </div>
+
+    <!-- Included chips -->
+    <div id="ds-included-section" style="display:none;margin-bottom:12px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:7px;">What's included</div>
+      <div id="ds-included" class="tags"></div>
+    </div>
+
+    <!-- Notes -->
+    <div id="ds-notes-section" style="display:none;margin-bottom:16px;">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:7px;">Notes</div>
+      <div id="ds-notes" style="font-size:13px;color:var(--text-muted);line-height:1.6;padding:10px;background:var(--cream);border-radius:var(--r-md);"></div>
+    </div>
+
+    <div style="display:flex;gap:8px;">
+      <button class="btn-primary" style="flex:1;" id="ds-edit-btn" onclick="">✏️ Edit this set</button>
+      <a id="ds-ebay-btn" href="#" target="_blank" rel="noopener" style="padding:14px 16px;border-radius:var(--r-full);background:#E4EDFC;color:#1A55B0;font-size:13px;font-weight:600;text-decoration:none;display:flex;align-items:center;white-space:nowrap;">eBay $</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ WISHLIST EDIT SHEET ══ -->
+<div class="sheet-overlay" id="wishEditSheet" onclick="if(event.target.classList.contains('sheet-overlay'))closeSheet('wishEditSheet')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-title">Edit Wishlist Item</div>
+    <div class="sheet-subtitle">Update details or move to your collection</div>
+
+    <input type="hidden" id="we-idx">
+    <div class="form-group">
+      <label class="form-label">Set Name *</label>
+      <input class="form-input" id="we-name" placeholder="e.g. Magical Mansion" type="text">
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Year</label>
+        <input class="form-input" id="we-year" placeholder="1991" type="number" min="1983" max="2000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Target Price ($)</label>
+        <input class="form-input" id="we-price" placeholder="0.00" type="number" min="0" step="0.01">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Priority</label>
+      <div class="chip-group" id="we-priority">
+        <div class="chip-opt" onclick="selectSingleChip('we-priority',this)" style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:#C0507A;flex-shrink:0;display:inline-block;"></span> Must Have</div>
+        <div class="chip-opt" onclick="selectSingleChip('we-priority',this)" style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:#D4A020;flex-shrink:0;display:inline-block;"></span> Want It</div>
+        <div class="chip-opt" onclick="selectSingleChip('we-priority',this)" style="display:flex;align-items:center;gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:#9B8FB0;flex-shrink:0;display:inline-block;"></span> Nice to Have</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Notes</label>
+      <textarea class="form-textarea" id="we-notes" placeholder="Source, eBay search tip…"></textarea>
+    </div>
+
+    <div style="height:1px;background:var(--outline);margin:16px 0;"></div>
+
+    <!-- Got it CTA -->
+    <div style="background:linear-gradient(135deg,#F7C5D530,#D9C6F030);border-radius:var(--r-md);padding:14px;margin-bottom:14px;border:1px solid var(--outline);">
+      <div style="font-family:'Fraunces',serif;font-size:15px;font-weight:600;margin-bottom:4px;">Found it? 🎉</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:12px;line-height:1.5;">Move this item from your wishlist to your collection. AI will pre-fill all the details.</div>
+      <button class="wish-got-btn" id="we-got-btn" onclick="gotItFromEditSheet()">
+        <div class="wish-got-spinner"></div>
+        <span class="wish-got-label">I got it! — Add to Collection</span>
+      </button>
+    </div>
+
+    <button class="btn-primary" onclick="saveWishEdit()">Save Changes</button>
+    <button class="btn-secondary" onclick="closeSheet('wishEditSheet')">Cancel</button>
+    <div style="height:1px;background:var(--outline);margin:16px 0 8px;"></div>
+    <button class="btn-danger" onclick="deleteWishFromEdit()">Remove from Wishlist</button>
+  </div>
+</div>
+
 <script>
 // ══ DATA ══
 let collection = JSON.parse(localStorage.getItem('pp_collection')||'[]');
@@ -1478,10 +1629,10 @@ function renderCollection(filter='', textFilter='') {
     const accIcon = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>`;
     const hasMissing = missingDolls.length > 0 || missingAccs.length > 0;
     return `
-    <div class="card">
+    <div class="card" style="cursor:pointer;" onclick="openDetailSheet(${idx})">
       <div class="card-strip" style="background:${escapeHTML(color)}"></div>
       ${item.photo ? `<img class="card-photo" src="${escapeHTML(item.photo)}" alt="${escapeHTML(item.name)}" loading="lazy">` : ''}
-      <div class="card-header">
+      <div class="card-header" onclick="event.stopPropagation()">
         <div>
           <div class="card-title">${escapeHTML(item.name)}</div>
           <div style="font-size:12px;color:var(--text-muted);margin-top:2px;">${escapeHTML(item.house||'—')} · ${escapeHTML(item.maker||'Bluebird')}</div>
@@ -1507,8 +1658,8 @@ function renderCollection(filter='', textFilter='') {
           <div><div class="price-lbl">Est. Value</div><div class="price-val">$${parseFloat(item.value||0).toFixed(2)}</div></div>
           <div style="text-align:right"><div class="price-lbl">Paid</div><div style="font-family:'Fraunces',serif;font-size:16px;color:var(--text-muted);">$${parseFloat(item.paid||0).toFixed(2)}</div></div>
           <div style="display:flex;gap:6px;align-items:center;">
-            <a href="${ebayUrl}" target="_blank" rel="noopener" style="font-size:10px;padding:4px 10px;border-radius:20px;background:#E4EDFC;color:#1A55B0;font-weight:600;text-decoration:none;white-space:nowrap;">eBay $</a>
-            <button onclick="deleteSet(${idx})" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:6px;display:flex;align-items:center;" aria-label="Delete set">${trashIcon}</button>
+            <a href="${ebayUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:10px;padding:4px 10px;border-radius:20px;background:#E4EDFC;color:#1A55B0;font-weight:600;text-decoration:none;white-space:nowrap;">eBay $</a>
+            <button onclick="event.stopPropagation();deleteSet(${idx})" style="background:none;border:none;cursor:pointer;color:var(--text-muted);padding:6px;display:flex;align-items:center;" aria-label="Delete set">${trashIcon}</button>
           </div>
         </div>
         ${item.notes?`<div style="font-size:12px;color:var(--text-muted);margin-top:8px;padding:8px;background:var(--cream);border-radius:12px;">${escapeHTML(item.notes)}</div>`:''}
@@ -1540,8 +1691,9 @@ function renderWishlist() {
           <div class="wish-name" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHTML(item.name)}</div>
           <div style="font-size:12px;color:var(--text-muted);margin-top:1px;">${escapeHTML(item.year||'?')} · ${escapeHTML(label(item.priority))}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
           <div class="wish-price">$${parseFloat(item.price||0).toFixed(0)}</div>
+          <button onclick="event.stopPropagation();openWishEditSheet(${i})" title="Edit" style="width:30px;height:30px;border-radius:50%;background:var(--surface);border:1.5px solid var(--outline);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;padding:0;color:var(--text-muted);"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
           ${chevronSVG}
         </div>
       </div>
@@ -1706,7 +1858,7 @@ function markAsMissing(btn) {
   const missingGroupId = parentId==='dolls-rows' ? 'missing-dolls-group' : parentId==='acc-rows' ? 'missing-acc-group' : null;
   if (!missingRowsId) { row.remove(); return; }
   const mRow = document.createElement('div'); mRow.className='list-input-row';
-  mRow.innerHTML=`<input class="form-input" value="${val.replace(/"/g,'&quot;')}" type="text" style="color:var(--text-muted);text-decoration:line-through;"><button onclick="restoreFromMissing(this)" title="Restore to have" style="background:#B8E8DC;color:#1A6B5A;font-size:16px;">+</button><button onclick="this.parentElement.remove();checkMissingGroup('${missingGroupId}')" title="Remove entirely" style="background:#F7C5D5;color:#8B2050;font-size:16px;">×</button>`;
+  mRow.innerHTML=`<input class="form-input" value="${val.replace(/"/g,'&quot;')}" type="text" style="color:#C0303A;font-style:italic;"><button onclick="restoreFromMissing(this)" title="Restore to have" style="background:#B8E8DC;color:#1A6B5A;font-size:16px;">+</button><button onclick="this.parentElement.remove();checkMissingGroup('${missingGroupId}')" title="Remove entirely" style="background:#F7C5D5;color:#8B2050;font-size:16px;">×</button>`;
   document.getElementById(missingRowsId).appendChild(mRow);
   document.getElementById(missingGroupId).style.display = 'block';
   row.remove();
@@ -1874,7 +2026,7 @@ function openEditSheet(idx) {
   if (missingDolls.length) {
     document.getElementById('missing-dolls-rows').innerHTML = missingDolls.map(d => `
       <div class="list-input-row">
-        <input class="form-input" value="${escapeHTML(d)}" type="text" style="color:var(--text-muted);">
+        <input class="form-input" value="${escapeHTML(d)}" type="text" style="color:#C0303A;font-style:italic;">
         <button onclick="restoreFromMissing(this)" title="Restore to have" style="background:#B8E8DC;color:#1A6B5A;font-size:16px;">+</button>
         <button onclick="this.parentElement.remove();checkMissingGroup('missing-dolls-group')" title="Remove entirely" style="background:#F7C5D5;color:#8B2050;font-size:16px;">×</button>
       </div>`).join('');
@@ -2465,6 +2617,135 @@ async function handleSheetCamera(input) {
     btn.disabled = false; txt.textContent = 'Search'; spin.classList.remove('show');
   };
   reader.readAsDataURL(file);
+}
+
+// ══ CARD DETAIL SHEET ══
+function openDetailSheet(idx) {
+  const item = collection[idx];
+  if (!item) return;
+  const personSVG = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5 21v-1a7 7 0 0114 0v1"/></svg>`;
+  const accSVG   = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>`;
+
+  const color    = item.color || '#D9C6F0';
+  const dolls    = (item.dolls || []).filter(Boolean);
+  const accs     = (item.accessories || []).filter(Boolean);
+  const mDolls   = (item.missingDolls || []).filter(Boolean);
+  const mAccs    = (item.missingAccessories || []).filter(Boolean);
+  const included = item.included || [];
+  const pct      = Math.min(100, Math.round(included.length / 6 * 100));
+  const condClass = item.condition==='Mint'?'cond-mint':item.condition==='Good'?'cond-good':'cond-play';
+
+  document.getElementById('ds-strip').style.background = color;
+  document.getElementById('ds-name').textContent  = item.name || '—';
+  document.getElementById('ds-meta').textContent  = `${item.house||'—'} · ${item.maker||'Bluebird'}`;
+  document.getElementById('ds-year').textContent  = item.year || '?';
+  const cond = document.getElementById('ds-condition');
+  cond.textContent = item.condition || 'Good';
+  cond.className   = 'condition-badge ' + condClass;
+  const rBadge = document.getElementById('ds-rarity');
+  rBadge.innerHTML = (item.rarity && item.rarity !== 'Common')
+    ? `<span class="rarity-badge rarity-${escapeHTML(item.rarity)}">${escapeHTML(item.rarity)}</span>` : '';
+  document.getElementById('ds-value').textContent = '$' + parseFloat(item.value||0).toFixed(2);
+  document.getElementById('ds-paid').textContent  = '$' + parseFloat(item.paid||0).toFixed(2);
+  document.getElementById('ds-pct').textContent   = pct + '%';
+  const prog = document.getElementById('ds-progress');
+  prog.style.width = pct + '%'; prog.style.background = color; prog.style.filter = 'saturate(1.5)';
+
+  const photo = document.getElementById('ds-photo');
+  if (item.photo) { photo.src = item.photo; photo.style.display = 'block'; }
+  else            { photo.style.display = 'none'; }
+
+  // Dolls
+  const dollSec = document.getElementById('ds-dolls-section');
+  if (dolls.length) {
+    document.getElementById('ds-dolls').innerHTML = dolls.map(d =>
+      `<span class="tag doll" style="display:inline-flex;align-items:center;gap:4px;">${personSVG} ${escapeHTML(d)}</span>`).join('');
+    dollSec.style.display = 'block';
+  } else { dollSec.style.display = 'none'; }
+
+  // Accessories
+  const accSec = document.getElementById('ds-acc-section');
+  if (accs.length) {
+    document.getElementById('ds-acc').innerHTML = accs.map(a =>
+      `<span class="tag acc" style="display:inline-flex;align-items:center;gap:4px;">${accSVG} ${escapeHTML(a)}</span>`).join('');
+    accSec.style.display = 'block';
+  } else { accSec.style.display = 'none'; }
+
+  // Missing
+  const missSec = document.getElementById('ds-missing-section');
+  if (mDolls.length || mAccs.length) {
+    document.getElementById('ds-missing').innerHTML = [
+      ...mDolls.map(d=>`<span class="tag missing" style="display:inline-flex;align-items:center;gap:4px;">${personSVG} ${escapeHTML(d)}</span>`),
+      ...mAccs.map(a=>`<span class="tag missing" style="display:inline-flex;align-items:center;gap:4px;">${accSVG} ${escapeHTML(a)}</span>`)
+    ].join('');
+    missSec.style.display = 'block';
+  } else { missSec.style.display = 'none'; }
+
+  // Included
+  const incSec = document.getElementById('ds-included-section');
+  if (included.length) {
+    document.getElementById('ds-included').innerHTML = included.map(c =>
+      `<span class="tag have">✓ ${escapeHTML(c)}</span>`).join('');
+    incSec.style.display = 'block';
+  } else { incSec.style.display = 'none'; }
+
+  // Notes
+  const notesSec = document.getElementById('ds-notes-section');
+  if (item.notes) {
+    document.getElementById('ds-notes').textContent = item.notes;
+    notesSec.style.display = 'block';
+  } else { notesSec.style.display = 'none'; }
+
+  document.getElementById('ds-edit-btn').setAttribute('onclick', `closeSheet('detailSheet');openEditSheet(${idx})`);
+  document.getElementById('ds-ebay-btn').href = buildEbayUrl(item.name);
+  document.getElementById('detailSheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+// ══ WISHLIST EDIT SHEET ══
+function openWishEditSheet(idx) {
+  const item = wishlist[idx];
+  if (!item) return;
+  document.getElementById('we-idx').value   = idx;
+  document.getElementById('we-name').value  = item.name  || '';
+  document.getElementById('we-year').value  = item.year  || '';
+  document.getElementById('we-price').value = item.price || '';
+  document.getElementById('we-notes').value = item.notes || '';
+  // Priority chips
+  const cleanP = (item.priority||'Want It').replace(/^[^\w]*/,'').trim();
+  document.querySelectorAll('#we-priority .chip-opt').forEach(c => {
+    c.classList.toggle('selected', c.textContent.trim().replace(/^[^\w]*/,'').trim() === cleanP);
+  });
+  document.getElementById('wishEditSheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function saveWishEdit() {
+  const idx  = parseInt(document.getElementById('we-idx').value);
+  const name = document.getElementById('we-name').value.trim();
+  if (!name) { showToast('Please enter a set name'); return; }
+  const priority = (document.querySelector('#we-priority .chip-opt.selected')?.textContent||'Want It').trim().replace(/^[^\w]*/,'').trim();
+  wishlist[idx] = {
+    ...wishlist[idx],
+    name, year: parseInt(document.getElementById('we-year').value)||'',
+    price: parseFloat(document.getElementById('we-price').value)||0,
+    priority, notes: document.getElementById('we-notes').value.trim()
+  };
+  save(); renderWishlist(); closeSheet('wishEditSheet');
+  showToast('Wishlist updated!');
+}
+
+function deleteWishFromEdit() {
+  const idx = parseInt(document.getElementById('we-idx').value);
+  if (!confirm(`Remove "${wishlist[idx]?.name}" from wishlist?`)) return;
+  wishlist.splice(idx, 1); save(); renderWishlist(); closeSheet('wishEditSheet');
+  showToast('Removed from wishlist');
+}
+
+async function gotItFromEditSheet() {
+  const idx = parseInt(document.getElementById('we-idx').value);
+  closeSheet('wishEditSheet');
+  await gotItWithAI(idx);
 }
 
 // ══ INLINE COLLECTION SEARCH ══
