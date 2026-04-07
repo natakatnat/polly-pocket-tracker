@@ -300,6 +300,24 @@
   body.dark .ai-result{background:var(--surface);}
   body.dark .card-year{background:var(--outline);}
   body.dark .filter-btn.active{background:#F7C5D530;border-color:#F7C5D5;color:#F7C5D5;}
+
+  /* ══ DB LOOKUP RESULT CARD ══ */
+  .db-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:3px 10px;border-radius:var(--r-full);margin-bottom:10px;}
+  .db-badge.local{background:#EDE0F8;color:#6B47A0;}
+  .db-badge.ai-badge{background:#FEF0F6;color:#8B2050;}
+  .missing-alert{background:#FFF0F1;border:1px solid #F4A0A8;border-radius:var(--r-md);padding:10px 12px;margin:8px 0;}
+  .missing-alert-label{font-size:10px;font-weight:700;color:#C0303A;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+  .missing-tag{display:inline-block;background:#fff;border:1px solid #F4A0A8;border-radius:var(--r-full);padding:3px 9px;font-size:11px;color:#C0303A;margin:2px 3px 2px 0;}
+  .suggestions-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center;}
+  .suggestions-label{font-size:11px;color:var(--text-muted);font-weight:600;width:100%;margin-bottom:2px;}
+  .suggestion-pill{padding:5px 13px;border-radius:var(--r-full);background:var(--surface);border:1.5px solid var(--outline);font-size:12px;font-weight:500;color:var(--text);cursor:pointer;transition:all .15s;white-space:nowrap;font-family:'DM Sans',sans-serif;}
+  .suggestion-pill:hover{background:var(--lilac);border-color:#C0A8E0;color:#5A2A90;}
+  .suggestion-pill:active{transform:scale(.96);}
+  .lookup-result-box{background:var(--cream);border-radius:var(--r-md);padding:12px 14px;margin-top:10px;border:1px solid var(--outline);display:none;}
+  .lookup-result-box.show{display:block;animation:fadeIn .25s ease;}
+  body.dark .suggestion-pill{background:var(--surface);border-color:var(--outline);}
+  body.dark .missing-alert{background:#2A1520;border-color:#6B2030;}
+  body.dark .lookup-result-box{background:var(--outline);}
 </style>
 </head>
 <body>
@@ -337,64 +355,25 @@
   <!-- COLLECTION -->
   <div class="section active" id="section-collection">
 
-    <!-- UNIFIED AI LOOKUP + SEARCH BAR -->
-    <div class="ai-lookup-box" id="collection-ai-lookup" style="margin-bottom:14px;">
-      <div class="ai-lookup-title">Find any Polly Pocket set</div>
-      <div class="ai-feature-pills">
-        <span class="ai-feature-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>Photo ID</span>
-        <span class="ai-feature-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Price check</span>
-        <span class="ai-feature-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Add to wishlist</span>
-        <span class="ai-feature-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add to collection</span>
-      </div>
-      <div class="ai-input-row">
-        <button class="camera-btn" onclick="triggerCamera()" aria-label="Identify set from photo" title="Identify from photo">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
-        </button>
-        <input type="file" id="camera-file-input" accept="image/*" capture="environment" style="display:none" onchange="handleCameraInput(this)">
-        <input class="ai-input" id="ai-query-coll" placeholder="Set name, doll, accessory, or compact shape…" type="text" onkeydown="if(event.key==='Enter')doAILookupFromCollection()" aria-label="Search for a Polly Pocket set by name, doll, accessory or shape">
-        <button class="ai-btn" id="ai-btn-coll" onclick="doAILookupFromCollection()" aria-label="Look up set">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          <span id="ai-btn-text-coll">Look up</span>
-        </button>
-      </div>
-      <p id="ai-rate-limit-coll" style="font-size:11px;color:var(--text-muted);text-align:right;margin-top:5px;"></p>
-      <div class="ai-spinner" id="ai-spinner-coll">
-        <div class="spinner"></div>
-        <span>Looking up vintage details<span class="typing-dots"><span></span><span></span><span></span></span></span>
-      </div>
-      <div class="ai-result" id="ai-result-coll">
-        <div class="ai-result-header">
-          <div>
-            <div class="ai-result-name" id="res-name-coll"></div>
-            <div class="ai-result-year" id="res-year-coll"></div>
-          </div>
-          <div class="ai-confidence" id="res-conf-coll"></div>
-        </div>
-        <div class="ai-price-row">
-          <div class="ai-price-chip"><div class="apc-val" id="res-play-coll"></div><div class="apc-lbl">Play Worn</div></div>
-          <div class="ai-price-chip"><div class="apc-val" id="res-good-coll"></div><div class="apc-lbl">Good</div></div>
-          <div class="ai-price-chip"><div class="apc-val" id="res-mint-coll"></div><div class="apc-lbl">Mint/MIB</div></div>
-        </div>
-        <div class="ai-tags-row" id="res-tags-coll"></div>
-        <a class="ebay-link" id="res-ebay-coll" href="#" target="_blank" rel="noopener">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/></svg>
-          View live eBay sold listings
-        </a>
-        <div style="display:flex;gap:8px;margin-top:8px;">
-          <button class="ai-fill-btn" style="flex:1;" onclick="openAddSheetWithAI()">+ Add to Collection</button>
-          <button class="wish-star-btn" onclick="addAIResultToWishlist()" aria-label="Save to Wishlist" data-tooltip="Save to Wishlist" style="width:52px;height:44px;border-radius:var(--r-full);background:#F7C5D5;border:1.5px solid #F4A28C;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:transform .15s;" aria-haspopup="false">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B2050" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    <!-- MY COLLECTION HEADER + INLINE EXPANDABLE SEARCH -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div style="font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--text);">My Collection</div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div id="coll-search-wrap" style="display:none;position:relative;align-items:center;">
+          <input id="coll-search-input" type="text" placeholder="Search…"
+            style="padding:8px 36px 8px 14px;border-radius:var(--r-full);border:1.5px solid #D9C6F0;background:var(--surface);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text);outline:none;width:164px;transition:border-color .2s;"
+            oninput="filterCollection(this.value)"
+            onblur="collapseSearchIfEmpty(this)"
+            onfocus="this.style.borderColor='#A07AB0'"
+            aria-label="Search your collection">
+          <button onclick="collapseSearch()" style="position:absolute;right:9px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-muted);padding:3px;display:flex;align-items:center;" aria-label="Clear search">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
+        <button id="coll-search-btn" onclick="expandSearch()" style="width:36px;height:36px;border-radius:50%;border:1.5px solid var(--outline);background:var(--surface);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-muted);box-shadow:0 1px 4px var(--shadow);transition:all .15s;flex-shrink:0;" aria-label="Search collection">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
       </div>
-    </div>
-
-    <!-- COLLECTION SEARCH (filters existing items only) -->
-    <div class="search-wrap">
-      <span class="search-icon" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </span>
-      <input type="text" placeholder="Filter your collection…" oninput="filterCollection(this.value)" aria-label="Filter your collection">
     </div>
 
     <div class="filter-row">
@@ -516,9 +495,8 @@
   </div>
 </div>
 
-<button class="fab" id="fab" onclick="openAddSheet()" aria-label="Add a new set to your collection">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-  Add Set
+<button class="fab" id="fab" onclick="openAddSheet()" aria-label="Add a new set to your collection" style="width:52px;height:52px;padding:0;border-radius:50%;">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
 </button>
 
 <nav class="bottom-nav" id="bottomNav" aria-label="Main navigation">
@@ -555,6 +533,44 @@
 
     <!-- STEP 1 -->
     <div id="sheet-step-1">
+
+      <!-- ── LOOKUP WIDGET ── -->
+      <div style="margin-bottom:16px;">
+        <div class="ai-input-row">
+          <button class="camera-btn" onclick="triggerSheetCamera()" aria-label="Identify set from photo" title="Identify from photo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </button>
+          <input type="file" id="sheet-camera-input" accept="image/*" capture="environment" style="display:none" onchange="handleSheetCamera(this)">
+          <input class="ai-input" id="sheet-lookup-query" placeholder="Type a set name to look it up…" type="text" onkeydown="if(event.key==='Enter')doSheetLookup()" aria-label="Look up a Polly Pocket set">
+          <button class="ai-btn" id="sheet-lookup-btn" onclick="doSheetLookup()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <span id="sheet-lookup-btn-text">Search</span>
+          </button>
+        </div>
+        <div class="ai-spinner" id="sheet-lookup-spinner">
+          <div class="spinner"></div>
+          <span>Looking up<span class="typing-dots"><span></span><span></span><span></span></span></span>
+        </div>
+        <!-- Inline lookup result -->
+        <div class="lookup-result-box" id="sheet-lookup-result">
+          <div id="slr-badge" class="db-badge local">📚 From local database</div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">
+            <div>
+              <div id="slr-name" style="font-family:'Fraunces',serif;font-size:15px;font-weight:600;"></div>
+              <div id="slr-meta" style="font-size:11px;color:var(--text-muted);margin-top:2px;"></div>
+            </div>
+          </div>
+          <div id="slr-prices" class="ai-price-row" style="margin-bottom:0;"></div>
+          <div id="slr-missing" class="missing-alert" style="display:none;">
+            <div class="missing-alert-label">⚠️ Commonly missing from this set</div>
+            <div id="slr-missing-items"></div>
+          </div>
+          <button class="ai-fill-btn" style="margin-top:10px;" onclick="applySheetLookupResult()">✓ Use this — fill in details</button>
+          <div id="slr-suggestions" class="suggestions-row" style="display:none;"></div>
+        </div>
+      </div>
+      <div class="form-divider"></div>
+
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">Set Name *</label>
@@ -656,13 +672,14 @@
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label">Card Color</label>
+        <label class="form-label">Set Color <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted);font-size:11px;">(compact, house, playset…)</span></label>
         <div class="chip-group" id="color-chips">
           <div class="chip-opt" onclick="selectColor(this,'#F7C5D5')" style="display:flex;align-items:center;gap:7px;"><span style="width:14px;height:14px;border-radius:50%;background:#F7C5D5;border:1.5px solid #F4A28C;flex-shrink:0;display:inline-block;"></span> Blush</div>
-          <div class="chip-opt selected" onclick="selectColor(this,'#D9C6F0')" style="display:flex;align-items:center;gap:7px;background:#D9C6F0;border-color:#A07AB0;color:#5A2A90;"><span style="width:14px;height:14px;border-radius:50%;background:#D9C6F0;border:1.5px solid #A07AB0;flex-shrink:0;display:inline-block;"></span> Lilac</div>
+          <div class="chip-opt selected" onclick="selectColor(this,'#D9C6F0')" style="display:flex;align-items:center;gap:7px;"><span style="width:14px;height:14px;border-radius:50%;background:#D9C6F0;border:1.5px solid #A07AB0;flex-shrink:0;display:inline-block;"></span> Lilac</div>
           <div class="chip-opt" onclick="selectColor(this,'#B8E8DC')" style="display:flex;align-items:center;gap:7px;"><span style="width:14px;height:14px;border-radius:50%;background:#B8E8DC;border:1.5px solid #3A9A82;flex-shrink:0;display:inline-block;"></span> Mint</div>
           <div class="chip-opt" onclick="selectColor(this,'#FAE8A4')" style="display:flex;align-items:center;gap:7px;"><span style="width:14px;height:14px;border-radius:50%;background:#FAE8A4;border:1.5px solid #D4A020;flex-shrink:0;display:inline-block;"></span> Butter</div>
           <div class="chip-opt" onclick="selectColor(this,'#BDDFF5')" style="display:flex;align-items:center;gap:7px;"><span style="width:14px;height:14px;border-radius:50%;background:#BDDFF5;border:1.5px solid #5099C5;flex-shrink:0;display:inline-block;"></span> Sky</div>
+          <div class="chip-opt" onclick="selectColor(this,'#D4CFC8')" style="display:flex;align-items:center;gap:7px;"><span style="width:14px;height:14px;border-radius:50%;background:#D4CFC8;border:1.5px solid #A8A09A;flex-shrink:0;display:inline-block;"></span> Other</div>
         </div>
       </div>
       <div class="form-group">
@@ -708,6 +725,7 @@
         <span>Looking up<span class="typing-dots"><span></span><span></span><span></span></span></span>
       </div>
       <div class="ai-result" id="wai-result">
+        <div id="wres-badge" class="db-badge local" style="margin-bottom:8px;">📚 From local database</div>
         <div class="ai-result-name" id="wres-name" style="font-family:'Fraunces',serif;font-size:15px;font-weight:600;margin-bottom:8px;"></div>
         <div class="ai-price-row">
           <div class="ai-price-chip"><div class="apc-val" id="wres-play"></div><div class="apc-lbl">Play Worn</div></div>
@@ -716,6 +734,7 @@
         </div>
         <a class="ebay-link" id="wres-ebay" href="#" target="_blank" rel="noopener">View live eBay sold listings</a>
         <button class="ai-fill-btn" onclick="applyWishAIResult()">Prefill wishlist fields</button>
+        <div id="wres-suggestions" class="suggestions-row" style="display:none;"></div>
       </div>
     </div>
 
@@ -903,21 +922,29 @@ let currentCollectionAIResult = null;
 let currentEditIdx = null;
 
 const priceGuide = [
-  {name:"Polly's Town House",year:1989,maker:"Bluebird",low:45,high:120,color:"#F7C5D5"},
-  {name:"Polly's Magical Mansion",year:1992,maker:"Bluebird",low:80,high:220,color:"#D9C6F0"},
-  {name:"Polly's Dream Cottage",year:1990,maker:"Bluebird",low:35,high:90,color:"#B8E8DC"},
-  {name:"Polly's Pool Party",year:1994,maker:"Bluebird",low:25,high:65,color:"#BDDFF5"},
-  {name:"Polly's Supermarket",year:1991,maker:"Bluebird",low:30,high:80,color:"#FAE8A4"},
-  {name:"Polly's School",year:1993,maker:"Bluebird",low:40,high:100,color:"#F7C5D5"},
-  {name:"Polly's Horse Stable",year:1992,maker:"Bluebird",low:55,high:145,color:"#B8E8DC"},
-  {name:"Polly's Beauty Salon",year:1991,maker:"Bluebird",low:30,high:75,color:"#D9C6F0"},
-  {name:"Polly's Seaside Cafe",year:1994,maker:"Bluebird",low:35,high:90,color:"#FAE8A4"},
-  {name:"Polly's Ice Cream Parlour",year:1995,maker:"Bluebird",low:40,high:95,color:"#F7C5D5"},
-  {name:"Polly's Nursery",year:1990,maker:"Bluebird",low:45,high:110,color:"#B8E8DC"},
-  {name:"Polly's Jungle Cruise",year:1996,maker:"Bluebird",low:60,high:155,color:"#B8E8DC"},
-  {name:"Polly's Baby Shower",year:1993,maker:"Bluebird",low:25,high:60,color:"#D9C6F0"},
-  {name:"Polly's Disco Club",year:1995,maker:"Bluebird",low:50,high:130,color:"#F7C5D5"},
-  {name:"Polly's Wedding Chapel",year:1997,maker:"Bluebird",low:45,high:115,color:"#D9C6F0"},
+  {name:"Polly's Town House",year:1989,maker:"Bluebird",low:45,high:120,color:"#F7C5D5",keywords:["house","home","town","compact"]},
+  {name:"Polly's Magical Mansion",year:1992,maker:"Bluebird",low:80,high:220,color:"#D9C6F0",keywords:["mansion","house","magic","magical","large","castle"]},
+  {name:"Polly's Dream Cottage",year:1990,maker:"Bluebird",low:35,high:90,color:"#B8E8DC",keywords:["cottage","house","dream","garden"]},
+  {name:"Polly's Pool Party",year:1994,maker:"Bluebird",low:25,high:65,color:"#BDDFF5",keywords:["pool","swim","water","party","splash","summer","outdoor"]},
+  {name:"Polly's Lido Pool",year:1991,maker:"Bluebird",low:30,high:75,color:"#BDDFF5",keywords:["pool","lido","swim","water","splash","summer","outdoor","slide"]},
+  {name:"Polly's Splash 'N' Swim",year:1995,maker:"Bluebird",low:28,high:70,color:"#BDDFF5",keywords:["pool","swim","splash","water","summer","slide","outdoor"]},
+  {name:"Polly's Waterpark",year:1996,maker:"Bluebird",low:45,high:110,color:"#BDDFF5",keywords:["pool","water","waterpark","slide","swim","outdoor","splash"]},
+  {name:"Polly's Supermarket",year:1991,maker:"Bluebird",low:30,high:80,color:"#FAE8A4",keywords:["shop","store","supermarket","market","grocery"]},
+  {name:"Polly's School",year:1993,maker:"Bluebird",low:40,high:100,color:"#F7C5D5",keywords:["school","classroom","learn","education"]},
+  {name:"Polly's Horse Stable",year:1992,maker:"Bluebird",low:55,high:145,color:"#B8E8DC",keywords:["horse","stable","animal","farm","pony","equestrian"]},
+  {name:"Polly's Beauty Salon",year:1991,maker:"Bluebird",low:30,high:75,color:"#D9C6F0",keywords:["beauty","salon","hair","makeup","spa","fashion"]},
+  {name:"Polly's Seaside Cafe",year:1994,maker:"Bluebird",low:35,high:90,color:"#FAE8A4",keywords:["cafe","seaside","beach","sea","food","restaurant","ocean"]},
+  {name:"Polly's Ice Cream Parlour",year:1995,maker:"Bluebird",low:40,high:95,color:"#F7C5D5",keywords:["ice cream","parlour","sweet","dessert","food","shop"]},
+  {name:"Polly's Nursery",year:1990,maker:"Bluebird",low:45,high:110,color:"#B8E8DC",keywords:["nursery","baby","garden","flower","plant"]},
+  {name:"Polly's Jungle Cruise",year:1996,maker:"Bluebird",low:60,high:155,color:"#B8E8DC",keywords:["jungle","cruise","adventure","boat","water","animals","river"]},
+  {name:"Polly's Baby Shower",year:1993,maker:"Bluebird",low:25,high:60,color:"#D9C6F0",keywords:["baby","shower","bath","nursery","cute"]},
+  {name:"Polly's Disco Club",year:1995,maker:"Bluebird",low:50,high:130,color:"#F7C5D5",keywords:["disco","club","dance","music","party","nightclub"]},
+  {name:"Polly's Wedding Chapel",year:1997,maker:"Bluebird",low:45,high:115,color:"#D9C6F0",keywords:["wedding","chapel","church","bride","romance"]},
+  {name:"Polly's Cosy Cottage",year:1989,maker:"Bluebird",low:40,high:95,color:"#FAE8A4",keywords:["cottage","cosy","house","home","garden","compact"]},
+  {name:"Polly's Fun Fair",year:1993,maker:"Bluebird",low:55,high:135,color:"#FAE8A4",keywords:["fun fair","fair","carnival","rides","outdoor","amusement"]},
+  {name:"Polly's Ballerina Studio",year:1994,maker:"Bluebird",low:35,high:85,color:"#D9C6F0",keywords:["ballet","ballerina","dance","studio","music","art"]},
+  {name:"Polly's Hospital",year:1992,maker:"Bluebird",low:50,high:120,color:"#B8E8DC",keywords:["hospital","doctor","nurse","medical","care"]},
+  {name:"Polly's Beach Party",year:1995,maker:"Bluebird",low:30,high:75,color:"#BDDFF5",keywords:["beach","party","sea","ocean","summer","water","swim","outdoor"]},
 ];
 
 // ══ TWO-STEP SHEET LOGIC ══
@@ -1078,11 +1105,23 @@ async function doAILookup() {
 async function doWishAILookup() {
   const query = document.getElementById('wai-query').value.trim();
   if (!query) { showToast('Type a set name first!'); return; }
+
+  // DB-first
+  const local = searchLocalDB(query);
+  if (local.length && local[0].score >= 60) {
+    const result = dbEntryToResult(local[0].set);
+    currentWAIResult = result;
+    displayWishAIResult(result, local.slice(1, 3), local[0].score);
+    return;
+  }
+
   setAILoading(true,'wai-btn','wai-btn-text','wai-spinner','wai-result');
   try {
     const result = await callClaudeForSetInfo(query);
-    currentWAIResult = result;
-    displayWishAIResult(result);
+    const enriched = enrichWithDB(result);
+    currentWAIResult = enriched;
+    const alts = searchLocalDB(query).slice(0, 2);
+    displayWishAIResult(enriched, alts, 0);
   } catch(e) {
     showToast('Lookup failed');
   }
@@ -1136,13 +1175,40 @@ function displayAIResult(r) {
   document.getElementById('ai-result').classList.add('show');
 }
 
-function displayWishAIResult(r) {
+function displayWishAIResult(r, alternatives, topScore) {
+  const badge = document.getElementById('wres-badge');
+  if (r.fromDB) { badge.textContent='📚 From local database'; badge.className='db-badge local'; }
+  else if (r.enrichedFromDB) { badge.textContent='✦ AI lookup · enriched from database'; badge.className='db-badge ai-badge'; }
+  else { badge.textContent='✦ Via AI lookup'; badge.className='db-badge ai-badge'; }
+
   document.getElementById('wres-name').textContent = r.name || '—';
-  document.getElementById('wres-play').textContent = `$${r.play_price||'?'}`;
-  document.getElementById('wres-good').textContent = `$${r.good_price||'?'}`;
-  document.getElementById('wres-mint').textContent = `$${r.mint_price||'?'}`;
+  document.getElementById('wres-play').textContent = `$${r.play_price??'?'}`;
+  document.getElementById('wres-good').textContent = `$${r.good_price??'?'}`;
+  document.getElementById('wres-mint').textContent = `$${r.mint_price??'?'}`;
   document.getElementById('wres-ebay').href = buildEbayUrl(r.name);
+
+  const sugDiv = document.getElementById('wres-suggestions');
+  if (alternatives && alternatives.length) {
+    const label = (topScore >= 80) ? 'Related sets →' : 'Did you mean?';
+    sugDiv.innerHTML = `<span class="suggestions-label">${label}</span>` +
+      alternatives.map(({ set }) =>
+        `<button class="suggestion-pill" onclick="loadWishSuggestion('${escapeHTML(set.id)}')">${escapeHTML(set.name)} <span style="opacity:.6;font-size:10px;">'${String(set.year).slice(2)}</span></button>`
+      ).join('');
+    sugDiv.style.display = 'flex';
+  } else {
+    sugDiv.style.display = 'none';
+  }
   document.getElementById('wai-result').classList.add('show');
+}
+
+function loadWishSuggestion(id) {
+  const set = POLLY_DB.find(s => s.id === id);
+  if (!set) return;
+  const result = dbEntryToResult(set);
+  currentWAIResult = result;
+  const query = document.getElementById('wai-query').value.trim();
+  const others = searchLocalDB(query).filter(r => r.set.id !== id).slice(0, 2);
+  displayWishAIResult(result, others, 100);
 }
 
 function applyAIResult() {
@@ -1384,9 +1450,33 @@ function renderWishlist() {
   }).join('');
 }
 
+function yearToColor(y) {
+  if (y <= 1989) return '#F7C5D5';
+  if (y <= 1991) return '#B8E8DC';
+  if (y <= 1993) return '#D9C6F0';
+  if (y <= 1995) return '#FAE8A4';
+  return '#BDDFF5';
+}
+
 function renderPriceGuide(filter='') {
-  let items = priceGuide;
-  if (filter) items = items.filter(x=>x.name.toLowerCase().includes(filter.toLowerCase()));
+  // Use full DB when loaded, otherwise fall back to the hardcoded guide
+  const source = POLLY_DB.length
+    ? POLLY_DB.map(s => ({
+        name: s.name, year: s.year, maker: s.maker,
+        low: s.pricePlay, high: s.priceMint,
+        color: yearToColor(s.year),
+        keywords: (s.aliases || [])
+      }))
+    : priceGuide;
+
+  let items = source;
+  if (filter) {
+    const t = filter.toLowerCase();
+    items = items.filter(x =>
+      x.name.toLowerCase().includes(t) ||
+      (x.keywords||[]).some(k => k.toLowerCase().includes(t))
+    );
+  }
   document.getElementById('price-guide-list').innerHTML = items.map(x=>{
     return `
     <div class="price-guide-item">
@@ -1581,8 +1671,14 @@ function resetAddForm() {
   document.getElementById('missing-dolls-group').style.display='none';
   document.getElementById('missing-acc-group').style.display='none';
   document.querySelectorAll('#chips-included .chip-opt').forEach(c=>c.classList.remove('selected'));
-  document.getElementById('ai-query-coll').value='';
-  document.getElementById('ai-result-coll').classList.remove('show');
+  document.getElementById('ai-query-coll') && (document.getElementById('ai-query-coll').value='');
+  document.getElementById('ai-result-coll') && document.getElementById('ai-result-coll').classList.remove('show');
+  // Reset sheet lookup widget
+  const slq = document.getElementById('sheet-lookup-query');
+  if (slq) slq.value = '';
+  const slr = document.getElementById('sheet-lookup-result');
+  if (slr) slr.classList.remove('show');
+  currentSheetLookupResult = null;
   currentAIResult=null; currentCollectionAIResult=null; selectedColor='#D9C6F0';
   currentEditIdx=null;
   document.getElementById('addSheet-title').textContent='Add a Set';
@@ -2014,8 +2110,274 @@ function renderDataTables() {
   }
 }
 
+// ══ POLLY DB ENGINE ══
+let POLLY_DB = [];
+let currentSheetLookupResult = null;
+
+async function loadPollyDB() {
+  try {
+    const res = await fetch('./POLLY_DB.json');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    POLLY_DB = data.sets || [];
+    renderPriceGuide(); // upgrade price guide to full 337-set DB
+    console.log('Pocket Tracker: loaded ' + POLLY_DB.length + ' sets ✦');
+  } catch(e) {
+    console.warn('POLLY_DB not loaded — AI-only mode:', e.message);
+  }
+}
+
+function normalizeQuery(str) {
+  return (str || '')
+    .toLowerCase()
+    .replace(/polly'?s?\s*/gi, '')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function searchLocalDB(query) {
+  if (!POLLY_DB.length || !query) return [];
+  const norm = normalizeQuery(query);
+  if (!norm) return [];
+  const words = norm.split(/\s+/).filter(w => w.length > 1);
+
+  const scored = POLLY_DB.map(set => {
+    const nameNorm = normalizeQuery(set.name);
+    const aliasesNorm = (set.aliases || []).map(normalizeQuery);
+    let score = 0;
+
+    if (nameNorm === norm)                              score = 100;
+    else if (nameNorm.startsWith(norm))                score = 90;
+    else if (nameNorm.includes(norm))                  score = 80;
+    else if (aliasesNorm.some(a => a === norm))        score = 75;
+    else if (aliasesNorm.some(a => a.startsWith(norm)))score = 70;
+    else if (aliasesNorm.some(a => a.includes(norm)))  score = 60;
+
+    if (score < 30 && words.length) {
+      const n = words.filter(w => nameNorm.includes(w) || aliasesNorm.some(a => a.includes(w))).length;
+      if (n) score = Math.max(score, n * 15);
+    }
+    return { set, score };
+  })
+  .filter(x => x.score > 0)
+  .sort((a, b) => b.score - a.score);
+
+  return scored;
+}
+
+function dbEntryToResult(set) {
+  const rarityMap = { common:'Common', uncommon:'Uncommon', rare:'Rare', 'very rare':'Grail' };
+  return {
+    name: set.name, year: set.year, maker: set.maker,
+    house: set.shape || '',
+    dolls: set.dolls || [], accessories: set.accessories || [],
+    commonlyMissing: set.commonlyMissing || [],
+    play_price: set.pricePlay, good_price: set.priceGood, mint_price: set.priceMint,
+    rarity: rarityMap[(set.rarity||'').toLowerCase()] || 'Common',
+    lightUp: set.lightUp || false, notes: set.notes || '',
+    confidence: 'high', fromDB: true, dbId: set.id
+  };
+}
+
+function enrichWithDB(apiResult) {
+  if (!POLLY_DB.length) return { ...apiResult, commonlyMissing: [] };
+  const matches = searchLocalDB(apiResult.name || '');
+  if (matches.length && matches[0].score >= 75) {
+    const s = matches[0].set;
+    const rarityMap = { common:'Common', uncommon:'Uncommon', rare:'Rare', 'very rare':'Grail' };
+    return {
+      ...apiResult,
+      commonlyMissing: s.commonlyMissing || [],
+      house: apiResult.house || s.shape || '',
+      lightUp: s.lightUp || false,
+      rarity: apiResult.rarity || rarityMap[(s.rarity||'').toLowerCase()] || 'Common',
+      fromDB: false, enrichedFromDB: true, dbId: s.id
+    };
+  }
+  return { ...apiResult, commonlyMissing: [] };
+}
+
+// ══ SHEET LOOKUP ══
+async function doSheetLookup() {
+  const query = document.getElementById('sheet-lookup-query').value.trim();
+  if (!query) { showToast('Type a set name first!'); return; }
+
+  const local = searchLocalDB(query);
+  if (local.length && local[0].score >= 60) {
+    const result = dbEntryToResult(local[0].set);
+    currentSheetLookupResult = result;
+    displaySheetLookupResult(result, local.slice(1, 3), local[0].score);
+    return;
+  }
+
+  if (!checkRateLimit()) return;
+  const btn = document.getElementById('sheet-lookup-btn');
+  const txt = document.getElementById('sheet-lookup-btn-text');
+  const spin = document.getElementById('sheet-lookup-spinner');
+  btn.disabled = true; txt.textContent = '…'; spin.classList.add('show');
+  try {
+    const result = await callClaudeForSetInfo(query);
+    const enriched = enrichWithDB(result);
+    const alts = searchLocalDB(query).slice(0, 2);
+    currentSheetLookupResult = enriched;
+    displaySheetLookupResult(enriched, alts, 0);
+  } catch(e) {
+    showToast('Lookup failed — fill in manually');
+  }
+  btn.disabled = false; txt.textContent = 'Search'; spin.classList.remove('show');
+}
+
+function displaySheetLookupResult(r, alternatives, topScore) {
+  const badge = document.getElementById('slr-badge');
+  if (r.fromDB) {
+    badge.textContent = '📚 From local database';
+    badge.className = 'db-badge local';
+  } else if (r.enrichedFromDB) {
+    badge.textContent = '✦ AI lookup · enriched from database';
+    badge.className = 'db-badge ai-badge';
+  } else {
+    badge.textContent = '✦ Via AI lookup';
+    badge.className = 'db-badge ai-badge';
+  }
+
+  document.getElementById('slr-name').textContent = r.name || '—';
+  document.getElementById('slr-meta').textContent =
+    `${r.year || '?'} · ${r.maker || 'Bluebird'}${r.house ? '  ·  ' + r.house : ''}`;
+
+  document.getElementById('slr-prices').innerHTML = `
+    <div class="ai-price-chip"><div class="apc-val">$${r.play_price ?? '?'}</div><div class="apc-lbl">Play Worn</div></div>
+    <div class="ai-price-chip"><div class="apc-val">$${r.good_price ?? '?'}</div><div class="apc-lbl">Good</div></div>
+    <div class="ai-price-chip"><div class="apc-val">$${r.mint_price ?? '?'}</div><div class="apc-lbl">Mint/MIB</div></div>`;
+
+  const missingDiv = document.getElementById('slr-missing');
+  const missing = r.commonlyMissing || [];
+  if (missing.length) {
+    document.getElementById('slr-missing-items').innerHTML =
+      missing.map(m => `<span class="missing-tag">✗ ${escapeHTML(m)}</span>`).join('');
+    missingDiv.style.display = 'block';
+  } else {
+    missingDiv.style.display = 'none';
+  }
+
+  const sugDiv = document.getElementById('slr-suggestions');
+  if (alternatives && alternatives.length) {
+    const label = topScore >= 80 ? 'Related sets →' : 'Did you mean?';
+    sugDiv.innerHTML = `<span class="suggestions-label">${label}</span>` +
+      alternatives.map(({ set }) =>
+        `<button class="suggestion-pill" onclick="loadSuggestion('${escapeHTML(set.id)}')">${escapeHTML(set.name)} <span style="opacity:.6;font-size:10px;">'${String(set.year).slice(2)}</span></button>`
+      ).join('');
+    sugDiv.style.display = 'flex';
+  } else {
+    sugDiv.style.display = 'none';
+  }
+
+  document.getElementById('sheet-lookup-result').classList.add('show');
+}
+
+function loadSuggestion(id) {
+  const set = POLLY_DB.find(s => s.id === id);
+  if (!set) return;
+  const result = dbEntryToResult(set);
+  currentSheetLookupResult = result;
+  const query = document.getElementById('sheet-lookup-query').value.trim();
+  const others = searchLocalDB(query).filter(r => r.set.id !== id).slice(0, 2);
+  displaySheetLookupResult(result, others, 100);
+}
+
+function applySheetLookupResult() {
+  const r = currentSheetLookupResult;
+  if (!r) return;
+  const rarityMap = { common:'Common', uncommon:'Uncommon', rare:'Rare', 'very rare':'Grail' };
+  document.getElementById('f-name').value  = r.name  || '';
+  document.getElementById('f-year').value  = r.year  || '';
+  document.getElementById('f-house').value = r.house || '';
+  if (r.maker) document.getElementById('f-maker').value = r.maker;
+  document.getElementById('f-value').value = r.good_price || '';
+  if (r.notes) document.getElementById('f-notes').value = r.notes;
+  if (r.rarity) document.getElementById('f-rarity').value =
+    rarityMap[(r.rarity||'').toLowerCase()] || r.rarity;
+
+  const dollsContainer = document.getElementById('dolls-rows');
+  if (r.dolls && r.dolls.length) {
+    dollsContainer.innerHTML = r.dolls.map(d =>
+      `<div class="list-input-row"><input class="form-input prefilled" value="${escapeHTML(d)}" type="text"><button onclick="markAsMissing(this)" title="Mark as missing">−</button></div>`
+    ).join('') + `<div class="list-input-row"><input class="form-input" placeholder="Add another doll…" type="text"><button onclick="markAsMissing(this)" title="Mark as missing">−</button></div>`;
+  }
+  const accContainer = document.getElementById('acc-rows');
+  if (r.accessories && r.accessories.length) {
+    accContainer.innerHTML = r.accessories.map(a =>
+      `<div class="list-input-row"><input class="form-input prefilled" value="${escapeHTML(a)}" type="text"><button onclick="markAsMissing(this)" title="Mark as missing">−</button></div>`
+    ).join('') + `<div class="list-input-row"><input class="form-input" placeholder="Add another…" type="text"><button onclick="markAsMissing(this)" title="Mark as missing">−</button></div>`;
+  }
+  ['f-name','f-year','f-house','f-value'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.value) el.classList.add('prefilled');
+  });
+  showToast('Fields filled in! Edit anything you need.');
+  setTimeout(() => document.getElementById('f-name').scrollIntoView({ behavior:'smooth', block:'center' }), 120);
+}
+
+function triggerSheetCamera() {
+  document.getElementById('sheet-camera-input').value = '';
+  document.getElementById('sheet-camera-input').click();
+}
+
+async function handleSheetCamera(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('Image too large — use a photo under 5 MB'); return; }
+  const btn = document.getElementById('sheet-lookup-btn');
+  const txt = document.getElementById('sheet-lookup-btn-text');
+  const spin = document.getElementById('sheet-lookup-spinner');
+  btn.disabled = true; txt.textContent = '…'; spin.classList.add('show');
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try {
+      const base64 = e.target.result.split(',')[1];
+      const mediaType = file.type || 'image/jpeg';
+      const result = await callClaudeWithImage(base64, mediaType);
+      document.getElementById('sheet-lookup-query').value = result.name || '';
+      const enriched = enrichWithDB(result);
+      currentSheetLookupResult = enriched;
+      // Photo = exact match → no alternatives (per design)
+      displaySheetLookupResult(enriched, [], 100);
+    } catch(e) {
+      showToast('Could not identify set — try a clearer photo');
+    }
+    btn.disabled = false; txt.textContent = 'Search'; spin.classList.remove('show');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ══ INLINE COLLECTION SEARCH ══
+function expandSearch() {
+  const btn = document.getElementById('coll-search-btn');
+  const wrap = document.getElementById('coll-search-wrap');
+  const input = document.getElementById('coll-search-input');
+  if (btn) btn.style.display = 'none';
+  if (wrap) { wrap.style.display = 'flex'; }
+  if (input) { input.focus(); }
+}
+function collapseSearch() {
+  const btn = document.getElementById('coll-search-btn');
+  const wrap = document.getElementById('coll-search-wrap');
+  const input = document.getElementById('coll-search-input');
+  if (input) input.value = '';
+  filterCollection('');
+  if (wrap) wrap.style.display = 'none';
+  if (btn) btn.style.display = 'flex';
+}
+function collapseSearchIfEmpty(input) {
+  // Small delay so clicking the × button fires before blur
+  setTimeout(() => {
+    if (!input.value.trim()) collapseSearch();
+  }, 150);
+}
+
 // INIT
 updateStats(); renderCollection(); renderWishlist(); renderPriceGuide(); updateRateLimitUI();
+loadPollyDB(); // load 337-set DB; upgrades price guide + enables instant lookups
 
 
 // ══ DARK MODE ══
