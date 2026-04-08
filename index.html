@@ -1222,21 +1222,24 @@ async function doAILookupFromCollection() {
 
   // DB-first — no API call, no rate-limit consumption
   const local = searchLocalDB(query);
-  if (local.length && local[0].score >= 60) {
+  if (local.length && local[0].score >= 30) {
+    const topScore = local[0].score;
     const result = dbEntryToResult(local[0].set);
+    // Fuzzy/partial match — show medium confidence so the user knows it's a best guess
+    if (topScore < 60) result.confidence = 'medium';
     currentCollectionAIResult = result;
-    displayAIResultCollection(result, local.slice(1, 3), local[0].score);
+    displayAIResultCollection(result, local.slice(1, 5), topScore);
     return;
   }
 
-  // Fall through to Claude
+  // Fall through to Claude — nothing in DB matched
   if (!checkRateLimit()) return;
   setAILoading(true,'ai-btn-coll','ai-btn-text-coll','ai-spinner-coll','ai-result-coll');
   try {
     const result = await callClaudeForSetInfo(query);
     const enriched = enrichWithDB(result);
     currentCollectionAIResult = enriched;
-    const alts = searchLocalDB(query).slice(0, 2);
+    const alts = searchLocalDB(query).slice(0, 4);
     displayAIResultCollection(enriched, alts, 0);
   } catch(e) {
     showToast('Lookup failed — fill in manually');
@@ -1304,7 +1307,7 @@ function loadCollSuggestion(id) {
   const result = dbEntryToResult(set);
   currentCollectionAIResult = result;
   const query = document.getElementById('ai-query-coll').value.trim();
-  const others = searchLocalDB(query).filter(r => r.set.id !== id).slice(0, 2);
+  const others = searchLocalDB(query).filter(r => r.set.id !== id).slice(0, 4);
   displayAIResultCollection(result, others, 100);
 }
 function addAIResultToWishlist() {
@@ -1387,7 +1390,7 @@ async function doWishAILookup() {
     const result = await callClaudeForSetInfo(query);
     const enriched = enrichWithDB(result);
     currentWAIResult = enriched;
-    const alts = searchLocalDB(query).slice(0, 2);
+    const alts = searchLocalDB(query).slice(0, 4);
     displayWishAIResult(enriched, alts, 0);
   } catch(e) {
     showToast('Lookup failed');
@@ -1474,7 +1477,7 @@ function loadWishSuggestion(id) {
   const result = dbEntryToResult(set);
   currentWAIResult = result;
   const query = document.getElementById('wai-query').value.trim();
-  const others = searchLocalDB(query).filter(r => r.set.id !== id).slice(0, 2);
+  const others = searchLocalDB(query).filter(r => r.set.id !== id).slice(0, 4);
   displayWishAIResult(result, others, 100);
 }
 
@@ -2427,6 +2430,19 @@ function searchLocalDB(query) {
       const n = words.filter(w => nameNorm.includes(w) || aliasesNorm.some(a => a.includes(w))).length;
       if (n) score = Math.max(score, n * 15);
     }
+    // Fuzzy prefix tier — catches typos like "pookl"→"pool", "beachh"→"beach"
+    if (score < 20 && words.length) {
+      const allDbWords = [
+        ...nameNorm.split(/\s+/),
+        ...aliasesNorm.flatMap(a => a.split(/\s+/))
+      ].filter(w => w.length >= 3);
+      const fuzzy = words.filter(qw => {
+        if (qw.length < 3) return false;
+        const pfx = qw.slice(0, Math.min(4, qw.length));
+        return allDbWords.some(dw => dw.startsWith(pfx) || (dw.length >= 3 && pfx.startsWith(dw.slice(0, 3))));
+      }).length;
+      if (fuzzy) score = Math.max(score, fuzzy * 10);
+    }
     return { set, score };
   })
   .filter(x => x.score > 0)
@@ -2473,10 +2489,12 @@ async function doSheetLookup() {
   if (!query) { showToast('Type a set name first!'); return; }
 
   const local = searchLocalDB(query);
-  if (local.length && local[0].score >= 60) {
+  if (local.length && local[0].score >= 30) {
+    const topScore = local[0].score;
     const result = dbEntryToResult(local[0].set);
+    if (topScore < 60) result.confidence = 'medium';
     currentSheetLookupResult = result;
-    displaySheetLookupResult(result, local.slice(1, 3), local[0].score);
+    displaySheetLookupResult(result, local.slice(1, 3), topScore);
     return;
   }
 
@@ -2488,7 +2506,7 @@ async function doSheetLookup() {
   try {
     const result = await callClaudeForSetInfo(query);
     const enriched = enrichWithDB(result);
-    const alts = searchLocalDB(query).slice(0, 2);
+    const alts = searchLocalDB(query).slice(0, 4);
     currentSheetLookupResult = enriched;
     displaySheetLookupResult(enriched, alts, 0);
   } catch(e) {
@@ -2550,7 +2568,7 @@ function loadSuggestion(id) {
   const result = dbEntryToResult(set);
   currentSheetLookupResult = result;
   const query = document.getElementById('sheet-lookup-query').value.trim();
-  const others = searchLocalDB(query).filter(r => r.set.id !== id).slice(0, 2);
+  const others = searchLocalDB(query).filter(r => r.set.id !== id).slice(0, 4);
   displaySheetLookupResult(result, others, 100);
 }
 
